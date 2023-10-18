@@ -5,13 +5,21 @@ import numpy as np
 import pytesseract as tes
 from matplotlib.widgets import  Slider
 
-cap = cv2.VideoCapture("Video_process/Videos/Full_font1.avi")
-cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+###############################
+# Input path
+path = "Video_process/Videos/Full_font1.avi"
+sec = float(input('Set timestep in sec: '))
+thresh = 145
+###############################
+cap = cv2.VideoCapture(path)
+fps = cap.get(cv2.CAP_PROP_FPS)
+n_frame = int(fps*sec)
+
+cap.set(cv2.CAP_PROP_POS_FRAMES, n_frame)
 ret, BASE_FRAME = cap.read()
 
 
 
-# The parametrized function to be plotted
 def apply_thresh(thresh):
     frame_2color = cv2.cvtColor(BASE_FRAME, cv2.COLOR_BGR2GRAY)
     _, frame_bw = cv2.threshold(
@@ -24,18 +32,14 @@ def apply_thresh(thresh):
 
 
 
-thresh = 0
-
+frame = apply_thresh(thresh)
 
 fig, ax = plt.subplots()
-
-frame = apply_thresh(thresh)
-image_plot = ax.imshow(frame)
-ax.text(5, 60, r'', fontsize=15)
-image_plot.set_xlabel(f'Recognize: {tes.image_to_string(frame)}')
-
 fig.subplots_adjust(top=1, hspace=0, bottom=0.25)
 axfreq = fig.add_axes([0.2, 0.1, 0.6, 0.03])
+
+image_plot = ax.imshow(frame)
+text = ax.text(5, 1, f'Recognize: {tes.image_to_string(frame)}', fontsize=15)
 
 thresh_slider = Slider(
     ax=axfreq,
@@ -52,7 +56,7 @@ def update(val):
 
     image_plot.autoscale()
     image_plot.set_data(frame)
-    image_plot.set_xlabel(f'Recognize: {tes.image_to_string(frame)}')
+    text.set_text(f'Recognize: {tes.image_to_string(frame)}')
 
     fig.canvas.draw_idle()
 

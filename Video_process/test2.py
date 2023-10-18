@@ -54,7 +54,7 @@ def update(val):
     thresh=thresh_slider.val
     image_plot.autoscale()
     frame = apply_thresh(thresh)
-    image_plot.set_data()
+    image_plot.set_data(frame)
     fig.canvas.draw_idle()
 
 
