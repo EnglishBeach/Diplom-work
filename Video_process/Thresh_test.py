@@ -7,7 +7,7 @@ from matplotlib.widgets import  Slider
 
 ###############################
 # Input path
-path = "Video_process/Videos/Full_font1.avi"
+path = "Video_process/Videos/Full_font2.avi"
 sec = float(input('Set timestep in sec: '))
 thresh = 145
 ###############################
@@ -19,7 +19,6 @@ cap.set(cv2.CAP_PROP_POS_FRAMES, n_frame)
 ret, BASE_FRAME = cap.read()
 
 
-
 def apply_thresh(thresh):
     frame_2color = cv2.cvtColor(BASE_FRAME, cv2.COLOR_BGR2GRAY)
     _, frame_bw = cv2.threshold(
@@ -28,17 +27,17 @@ def apply_thresh(thresh):
         255,
         cv2.THRESH_BINARY,
     )
-    return frame_bw
+    return (frame_bw+1)%256
 
 
 
-frame = apply_thresh(thresh)
+frame = apply_thresh(thresh)[180:280,:]
 
 fig, ax = plt.subplots()
 fig.subplots_adjust(top=1, hspace=0, bottom=0.25)
 axfreq = fig.add_axes([0.2, 0.1, 0.6, 0.03])
 
-image_plot = ax.imshow(frame)
+image_plot = ax.imshow(frame,cmap='binary')
 text = ax.text(5, 1, f'Recognize: {tes.image_to_string(frame)}', fontsize=15)
 
 thresh_slider = Slider(
@@ -52,7 +51,7 @@ thresh_slider = Slider(
 
 def update(val):
     thresh= thresh_slider.val
-    frame = apply_thresh(thresh)
+    frame = apply_thresh(thresh)[180:280,:]
 
     image_plot.autoscale()
     image_plot.set_data(frame)
