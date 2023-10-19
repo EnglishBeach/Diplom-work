@@ -7,7 +7,7 @@ from matplotlib.widgets import  Slider
 
 ###############################
 # Input path
-path = "Video_process/Videos/Full_font2.avi"
+path = "Video_process/Videos/Start5.avi"
 sec = float(input('Set timestep in sec: '))
 thresh = 145
 strict= lambda image: image
