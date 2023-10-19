@@ -10,6 +10,9 @@ from matplotlib.widgets import  Slider
 path = "Video_process/Videos/Full_font2.avi"
 sec = float(input('Set timestep in sec: '))
 thresh = 145
+strict= lambda image: image
+    # image[209:278,:586]
+    # image[180:280,:]
 ###############################
 cap = cv2.VideoCapture(path)
 fps = cap.get(cv2.CAP_PROP_FPS)
@@ -27,18 +30,18 @@ def apply_thresh(thresh):
         255,
         cv2.THRESH_BINARY,
     )
-    return (frame_bw+1)%256
+    return frame_bw
 
 
 
-frame = apply_thresh(thresh)[180:280,:]
+frame = strict(apply_thresh(thresh))
 
 fig, ax = plt.subplots()
-fig.subplots_adjust(top=1, hspace=0, bottom=0.25)
+fig.subplots_adjust(top=0.8, hspace=0, bottom=0.25)
 axfreq = fig.add_axes([0.2, 0.1, 0.6, 0.03])
 
 image_plot = ax.imshow(frame,cmap='binary')
-text = ax.text(5, 1, f'Recognize: {tes.image_to_string(frame)}', fontsize=15)
+ax.set_title( f'{tes.image_to_string(frame)}')
 
 thresh_slider = Slider(
     ax=axfreq,
@@ -51,11 +54,11 @@ thresh_slider = Slider(
 
 def update(val):
     thresh= thresh_slider.val
-    frame = apply_thresh(thresh)[180:280,:]
+    frame = strict(apply_thresh(thresh))
 
     image_plot.autoscale()
     image_plot.set_data(frame)
-    text.set_text(f'Recognize: {tes.image_to_string(frame)}')
+    ax.set_title(f'{tes.image_to_string(frame)}')
 
     fig.canvas.draw_idle()
 
