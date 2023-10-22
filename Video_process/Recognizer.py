@@ -87,6 +87,7 @@ def update(val):
 
 TIME_slider.on_changed(update)
 BLUR_slider.on_changed(update)
+print('Configurate image processing')
 plt.show()
 
 # %%
@@ -132,11 +133,16 @@ plt.show()
 def correct(values):
     return values
 
-print('Start reader...')
+
+print('Starting recognizer...')
 reader = easyocr.Reader(['en'])
-# TODO: add input
-frames_per_sec = 1
-diap = tqdm(iterable=range(0, FPS * LENTH, int(FPS / frames_per_sec)))
+
+input_fps = int(input('Input number of frames per second: '))
+if isinstance(input_fps, int): read_fps = input_fps
+else: read_fps=1
+
+print('Recognizing:')
+diap = tqdm(iterable=range(0, FPS * LENTH, int(FPS / read_fps)))
 
 data = []
 for i_frame in diap:
@@ -156,4 +162,5 @@ for i_frame in diap:
     data.append(i_text)
 
 # %%
-print(data)
+for i in data:
+    print(i)
