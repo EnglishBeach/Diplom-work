@@ -24,7 +24,7 @@ from matplotlib.widgets import Slider
 ##########               INPUTS               ##########
 ########################################################
 
-VIDEO_PATH = "Videos/Start5.avi"
+VIDEO_PATH = "Videos/Start2.avi"
 # VIDEO_PATH = None
 rules = dict(re_rule=r'-?\d{1,3}\.\d', )
 RECOGNIZABLE_VARIABLES = [
@@ -131,7 +131,7 @@ cv2.destroyAllWindows()
 
 # Result plots
 fig, axes = plt.subplots(nrows=len(RECOGNIZABLE_VARIABLES))
-fig.set_t
+# fig.set_t
 if not isinstance(axes, np.ndarray): axes = [axes]
 fig.set_size_inches(3, 1 * len(RECOGNIZABLE_VARIABLES))
 fig.subplots_adjust(left=0, right=1, bottom=0.0, top=1, hspace=0, wspace=0)
@@ -148,13 +148,14 @@ plt.show()
 class ValueChecker:
     def check(self, image, raw_value, rules):
         pattern_check = self._pattern_check(raw_value[0], **rules)
-        if pattern_check is not None: return pattern_check
+        if pattern_check is not None: return 0,pattern_check
 
         img_check = self._image_check(image, rules)
-        if img_check is not None: return img_check
+        if img_check is not None: return 1,img_check
 
         # value_check = self._value_check(raw_value)
-        # if value_check is not None: return value_check
+        # if value_check is not None: return 2,value_check
+        return 3,None
 
     def __init__(self, processor: ImageProcessor, reader):
         self._processor = processor
@@ -241,10 +242,11 @@ for i_frame in frame_line:
         processed_img = image_processor(selection)
         raw_value = [value for _, value, _ in reader.readtext(processed_img)]
 
-        result = checker.check(image=selection,
+        mark, result = checker.check(image=selection,
                                raw_value=raw_value,
                                rules=variable['rules'])
         i_text[variable['name']] = result
+        i_text[variable['name']+'_mark'] = mark
 
     if None in i_text.values():
         errors += 1
