@@ -24,7 +24,7 @@ from matplotlib.widgets import Slider
 ##########               INPUTS               ##########
 ########################################################
 
-VIDEO_PATH = "Videos/Start2.avi"
+VIDEO_PATH = "./Video_process/Videos/Exp1/Exp1_7.mp4"
 # VIDEO_PATH = None
 rules = dict(re_rule=r'-?\d{1,3}\.\d', )
 RECOGNIZABLE_VARIABLES = [
@@ -84,7 +84,7 @@ BLUR_slider = Slider(
     orientation='vertical',
     label='Blur',
     valmin=image_processor.blur,
-    valmax=20,
+    valmax=50,
     valinit=1,
     valstep=1,
 )
@@ -146,28 +146,31 @@ plt.show()
 
 # %%
 class ValueChecker:
+
     def check(self, image, raw_value, rules):
-        pattern_check = self._pattern_check(raw_value[0], **rules)
-        if pattern_check is not None: return 0,pattern_check
+        pattern_check = self._pattern_check(raw_value, **rules)
+        if pattern_check is not None: return 0, pattern_check
 
         img_check = self._image_check(image, rules)
-        if img_check is not None: return 1,img_check
+        if img_check is not None: return 1, img_check
 
         # value_check = self._value_check(raw_value)
         # if value_check is not None: return 2,value_check
-        return 3,None
+        return 3, None
 
     def __init__(self, processor: ImageProcessor, reader):
-        self._processor = processor
+        self._processor = copy.deepcopy(processor)
         self._reader = reader
 
     def _pattern_check(
         self,
-        value: str,
+        value: list,
         re_rule=None,
         min_rule=None,
         max_rule=None,
     ):
+        if value==[]: return None
+        value = value[0]
         value = value.replace(',', '.')
         one_check = len(re.findall(re_rule, value)) == 1
         try:
@@ -179,6 +182,29 @@ class ValueChecker:
 
         result = value if one_check and min_check and max_check else None
         return result
+    def processor_configurator(self):
+        for i in range(1,50):
+            self._processor.blur=i
+            yield True
+
+    def _image_check(self, image, rules):
+        configurator = self.processor_configurator()
+        loop=True
+        while loop:
+            processed_img = self._processor(image=image)
+            raw_value = [
+                value for _, value, _ in self._reader.readtext(processed_img)
+            ]
+
+            result = self._pattern_check(raw_value, **rules)
+            if result is not None:
+                return result
+            else:
+                try:
+                    loop = configurator.__next__()
+                except StopIteration:
+                    return None
+
 
     def _value_check(self, raw_value: list):
         parts = len(raw_value)
@@ -203,18 +229,7 @@ class ValueChecker:
             result = None
         return result
 
-    def _image_check(self, image, rules):
-        processor = copy.deepcopy(self._processor)
-        # TODO: configure sweep
-        for i in range(1, 20):
-            processor.blur = i
-            processed_img = processor(image=image)
-            raw_value = [
-                value for _, value, _ in self._reader.readtext(processed_img)
-            ]
-            result = self._pattern_check(raw_value[0], **rules)
-            if result is not None:
-                return result
+
 
 # %%
 ## Recognize
@@ -230,7 +245,7 @@ except:
 
 print('Recognizing:')
 errors = 0
-frame_line = tqdm(iterable=range(0, FPS * LENTH, int(FPS / read_fps)))
+frame_line = tqdm(iterable=range(0, FPS * 50, int(FPS / read_fps)))
 frame_line.set_description(f'Errors: {errors: >4}')
 data = []
 for i_frame in frame_line:
@@ -252,7 +267,8 @@ for i_frame in frame_line:
         errors += 1
         frame_line.set_description(f'Errors: {errors: >4}')
     data.append(i_text)
-# pd.DataFrame(data)
+
 
 # %%
-pd.DataFrame(data)
+## Print
+print(pd.DataFrame(data))
