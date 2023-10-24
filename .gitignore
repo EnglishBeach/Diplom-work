@@ -1,3 +1,5 @@
 **_env
 Video_process/Videos/**
 Video_process/Images/**
+**.avi
+.vscode
