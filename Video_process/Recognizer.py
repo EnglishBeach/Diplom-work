@@ -6,7 +6,6 @@
 ## Imports
 print("Importing...")
 import re
-import copy
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
@@ -16,7 +15,7 @@ import cv2
 import easyocr
 
 from matplotlib.backends.backend_pdf import PdfPages
-from matplotlib.widgets import Slider
+import recognizer_modules
 
 
 # %%
@@ -24,17 +23,27 @@ from matplotlib.widgets import Slider
 ##########               INPUTS               ##########
 ########################################################
 
-VIDEO_PATH = "./Video_process/Videos/Exp1/Exp1_7.mp4"
+VIDEO_PATH = r"Video_process\Videos\Start1.avi"
 # VIDEO_PATH = None
-rules = dict(re_rule=r'-?\d{1,3}\.\d', )
-RECOGNIZABLE_VARIABLES = [
-    dict(name='Viscosity', rules=rules),
-    dict(name='Temperature', rules=rules),
-]
-
 
 # %%
-## Global settings
+## PreProcessor settings
+rules = dict(re_rule=r'-?\d{1,3}\.\d', )
+variable_patterns = {'Viscosity': rules, 'Temperature': rules}
+
+
+class PreProcessor(recognizer_modules.PreProcessor):
+    Blur = range(1, 50)
+
+    def process(self, image):
+        image = cv2.blur(image, (int(self['Blur']), int(self['Blur'])))
+        try:
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        except:
+            pass
+        image = cv2.bitwise_not(image)
+        return image
+
 if VIDEO_PATH is None:
     input_path = ''
     while input_path == '':
@@ -47,196 +56,74 @@ LENTH = int(CAP.get(cv2.CAP_PROP_FRAME_COUNT) / FPS)
 CAP.set(cv2.CAP_PROP_POS_FRAMES, 0)
 _, START_FRAME = CAP.read()
 
+processor = PreProcessor([i for i in variable_patterns])
+processor.configure_process(CAP)
+processor.select_window(CAP)
+processor.check_process(CAP)
+print('Configurating end')
 
 # %%
-## Image processor
-class ImageProcessor:
-    blur=1
-
-    def __call__(self, image):
-        image = cv2.blur(image, (self.blur, self.blur))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        image = cv2.bitwise_not(image)
-        return image
-
-# %%
-## Setup processor confings
-fig, ax = plt.subplots()
-fig.set_size_inches(5, 5)
-fig.subplots_adjust(left=0.25, right=1, bottom=0.25, top=1, hspace=0, wspace=0)
-
-image_processor = ImageProcessor()
-PLOT = ax.imshow(image_processor(START_FRAME), cmap='binary')
-
-ax_time_slider = fig.add_axes([0.25, 0.1, 0.65, 0.03])
-TIME_slider = Slider(
-    ax=ax_time_slider,
-    label='Time',
-    valmin=0,
-    valmax=LENTH,
-    valinit=0,
-    valstep=1,
-)
-
-ax_blur_slider = fig.add_axes([0.1, 0.25, 0.03, 0.6])
-BLUR_slider = Slider(
-    ax=ax_blur_slider,
-    orientation='vertical',
-    label='Blur',
-    valmin=image_processor.blur,
-    valmax=50,
-    valinit=1,
-    valstep=1,
-)
-
-
-def update(val):
-    time = TIME_slider.val
-    global image_processor
-    image_processor.blur = BLUR_slider.val
-
-    CAP.set(cv2.CAP_PROP_POS_FRAMES, int(FPS * time))
-    _, frame = CAP.read()
-    frame = image_processor(frame)
-
-    PLOT.set_data(frame)
-    PLOT.autoscale()
-
-    fig.canvas.draw_idle()
-
-
-TIME_slider.on_changed(update)
-BLUR_slider.on_changed(update)
-print('Configurate image processing')
-plt.show()
-
-# %%
-## Selection
-def strict(image, x, y, w, h):
-    return image[y:y + h, x:x + w]
-
-
-print(f'Blur value= {image_processor.blur}')
-for variable in RECOGNIZABLE_VARIABLES:
-    roi_frame = image_processor(START_FRAME)
-    roi_frame = cv2.bitwise_not(roi_frame)
-    current_slice = cv2.selectROI(
-        f"Select {variable['name']}",
-        roi_frame,
-        fromCenter=False,
-        showCrosshair=True,
-    )
-    variable['slice'] = current_slice
-cv2.destroyAllWindows()
-
-# Result plots
-fig, axes = plt.subplots(nrows=len(RECOGNIZABLE_VARIABLES))
-# fig.set_t
-if not isinstance(axes, np.ndarray): axes = [axes]
-fig.set_size_inches(3, 1 * len(RECOGNIZABLE_VARIABLES))
-fig.subplots_adjust(left=0, right=1, bottom=0.0, top=1, hspace=0, wspace=0)
-start_slices = [
-    strict(image_processor(START_FRAME), *variable['slice'])
-    for variable in RECOGNIZABLE_VARIABLES
-]
-for i in range(len(RECOGNIZABLE_VARIABLES)):
-    axes[i].set_axis_off()
-    axes[i].imshow(start_slices[i], cmap='binary')
-plt.show()
-
-# %%
-class ValueChecker:
-
-    def check(self, image, raw_value, rules):
-        pattern_check = self._pattern_check(raw_value, **rules)
-        if pattern_check is not None: return 0, pattern_check
-
-        img_check = self._image_check(image, rules)
-        if img_check is not None: return 1, img_check
-
-        # value_check = self._value_check(raw_value)
-        # if value_check is not None: return 2,value_check
-        return 3, None
-
-    def __init__(self, processor: ImageProcessor, reader):
-        self._processor = copy.deepcopy(processor)
-        self._reader = reader
-
-    def _pattern_check(
+## PostProcessor settings
+class PostProcessor(recognizer_modules.PostProcessor):
+    def pattern(
         self,
         value: list,
-        re_rule=None,
-        min_rule=None,
-        max_rule=None,
-    ):
-        if value==[]: return None
+        re_rule=None, min_rule=None, max_rule=None,
+
+    ) -> float|None:
+
+        if value == []: return None
         value = value[0]
         value = value.replace(',', '.')
-        one_check = len(re.findall(re_rule, value)) == 1
+        regexp_cond = len(re.findall(re_rule, value)) == 1
         try:
             value = float(value)
         except ValueError:
             return None
-        min_check = value <= min_rule if min_rule is not None else True
-        max_check = value >= max_rule if max_rule is not None else True
+        min_cond = value <= min_rule if min_rule is not None else True
+        max_cond = value >= max_rule if max_rule is not None else True
 
-        result = value if one_check and min_check and max_check else None
-        return result
-    def processor_configurator(self):
-        for i in range(1,50):
-            self._processor.blur=i
-            yield True
+        return value if regexp_cond and min_cond and max_cond else None
 
-    def _image_check(self, image, rules):
-        configurator = self.processor_configurator()
-        loop=True
-        while loop:
-            processed_img = self._processor(image=image)
+    @recognizer_modules.PostProcessor._check_type
+    def processor_sweep(self)->list[str]:
+        for i in range(1, 50):
+            self.inner_processor['Blur'] = i
+            processed_img = self.inner_processor(self._image)
             raw_value = [
                 value for _, value, _ in self._reader.readtext(processed_img)
             ]
 
-            result = self._pattern_check(raw_value, **rules)
-            if result is not None:
-                return result
-            else:
-                try:
-                    loop = configurator.__next__()
-                except StopIteration:
-                    return None
+            result = self.pattern(raw_value,**self._rules)
+            if result is not None: return raw_value
+        return []
 
-
-    def _value_check(self, raw_value: list):
-        parts = len(raw_value)
+    @recognizer_modules.PostProcessor._check_type
+    def value_combine(self) -> list[str]:
+        parts = len(self._raw_value)
         if parts == 1:
-            try:
-                check_result = float(raw_value[0])
-                if check_result > 1000:
-                    raw_result = str(check_result)
-                    raw_result = raw_result[:3] + '.' + raw_result[4]
-            except:
-                raw_result = None
+            value = self._raw_value[0]
+            result = value[:3] + '.' + value[4:5]
 
         elif parts == 2:
-            raw_result = '.'.join(raw_value)
+            result = '.'.join(self._raw_value)
 
         elif parts == 3:
-            raw_result = f'{raw_value[0]}.{raw_value[2]}'
+            result = f'{self._raw_value[0]}.{self._raw_value[2]}'
 
-        try:
-            result = float(raw_result)
-        except:
-            result = None
-        return result
+        return [result]
 
+print('Starting recognizer...')
+reader = easyocr.Reader(['en'])
+checker=PostProcessor(reader=reader, processor=processor)
+print([i for i in checker.all_checks])
+# checker.active_checks_order = {check:checker.all_checks[check] for check in ['inner_processor_check','value_combine']}
 
+# %%
+'afd'[1:2]
 
 # %%
 ## Recognize
-print('Starting recognizer...')
-reader = easyocr.Reader(['en'])
-checker = ValueChecker(reader=reader, processor=image_processor)
-
 input_fps = input('Input number of frames per second: ')
 try:
     read_fps = float(input_fps)
@@ -245,23 +132,28 @@ except:
 
 print('Recognizing:')
 errors = 0
-frame_line = tqdm(iterable=range(0, FPS * 50, int(FPS / read_fps)))
+frame_line = tqdm(iterable=range(0, FPS * LENTH, int(FPS / read_fps)))
 frame_line.set_description(f'Errors: {errors: >4}')
 data = []
+
 for i_frame in frame_line:
     CAP.set(cv2.CAP_PROP_POS_FRAMES, i_frame)
     _, frame = CAP.read()
     i_text = {'time': round(i_frame / FPS, 1)}
-    for variable in RECOGNIZABLE_VARIABLES:
-        selection = strict(frame, *variable['slice'])
-        processed_img = image_processor(selection)
-        raw_value = [value for _, value, _ in reader.readtext(processed_img)]
+    processed_frame = processor(frame)
+    stricted_images = processor.strict(processed_frame)
 
-        mark, result = checker.check(image=selection,
+    for var, rules in variable_patterns.items():
+        var_image = stricted_images[var]
+        raw_value = [
+            value for _, value, _ in reader.readtext(var_image)
+        ]
+
+        mark, result = checker.check(image=var_image,
                                raw_value=raw_value,
-                               rules=variable['rules'])
-        i_text[variable['name']] = result
-        i_text[variable['name']+'_mark'] = mark
+                               rules=rules)
+        i_text[var] = result
+        i_text[var + '_mark'] = mark
 
     if None in i_text.values():
         errors += 1
