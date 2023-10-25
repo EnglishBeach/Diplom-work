@@ -5,3 +5,4 @@ Video_process/Images/**
 **.avi
 **.mp4
 .vscode
+__pycache__
