@@ -102,10 +102,12 @@ class PreProcessor:
             self.variable_windows[variable] = window
         cv2.destroyAllWindows()
 
-    def check_process(self,
-                      video_capture,
-                      start_frame: int = 0,
-                      end_frame: int = 0):
+    def check_process(
+        self,
+        video_capture,
+        start_frame: int = 0,
+        end_frame: int = 0,
+    ):
 
         def update(val):
             time = TIME_slider.val
