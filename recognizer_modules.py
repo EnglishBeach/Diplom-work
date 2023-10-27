@@ -6,7 +6,7 @@ from matplotlib.widgets import Slider
 
 
 class PreProcessor:
-    _parametr_configurations = []
+    parametr_configurations = []
     parametrs = {}
 
     def configure_process(
@@ -62,7 +62,7 @@ class PreProcessor:
 
         sliders = []
         ofset = 0.2
-        for parametr, diap in self._parametr_configurations.items():
+        for parametr, diap in self.parametr_configurations.items():
             slider_ax = fig.add_axes([ofset, 0.25, 0.03, 0.6])
 
             p_min = min(diap)
@@ -82,25 +82,106 @@ class PreProcessor:
             sliders.append(slider)
             ofset -= 0.02
 
-        print('Configurate image processing')
         plt.show()
 
-    def select_window(self, video_capture, i_frame=0):
-        video_capture.set(cv2.CAP_PROP_POS_FRAMES, i_frame)
-        _, image = video_capture.read()
+    def _build_selection_window(
+        self,
+        video_capture,
+        window_name: str = 'Selection window',
+        start_frame: int = 0,
+    ):
+        cv2.namedWindow(window_name)
+        # if not cap.isOpened():
+        #     raise NameError
 
-        for variable in self.variable_windows:
-            processed_image = self.process(image)
-            processed_image = cv2.bitwise_not(processed_image)
-            # TODO: make border color=red
-            window = cv2.selectROI(
-                f"Select {variable}",
-                processed_image,
-                fromCenter=False,
-                showCrosshair=True,
-            )
-            self.variable_windows[variable] = window
+        # Our ROI, defined by two points
+        point0, point1 = (0, 0), (0, 0)
+        drawing = False  # True while ROI is actively being drawn by mouse
+        show_drawing = False  # True while ROI is drawn but is pending use or cancel
+        blue_color = (255, 0, 0)
+
+        def on_mouse(event, x, y, flags, userdata):
+            nonlocal point0, point1, drawing, show_drawing
+            if event == cv2.EVENT_LBUTTONDOWN:
+                # Left click down (select first point)
+                drawing = True
+                show_drawing = True
+                point0 = x, y
+                point1 = x, y
+            elif event == cv2.EVENT_MOUSEMOVE:
+                # Drag to second point
+                if drawing:
+                    point1 = x, y
+            elif event == cv2.EVENT_LBUTTONUP:
+                # Left click up (select second point)
+                drawing = False
+                point1 = x, y
+
+        cv2.setMouseCallback(window_name, on_mouse)
+        video_capture.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+        fps = int(video_capture.get(cv2.CAP_PROP_FPS))
+        i_frame = start_frame
+        while True:
+            i_frame += 1
+            capture_ready, frame = video_capture.read()
+            # Reset timer when video ends
+            if not capture_ready:
+                i_frame = start_frame
+                video_capture.set(cv2.CAP_PROP_POS_FRAMES, i_frame)
+                capture_ready, frame = video_capture.read()
+
+            frame = self.process(frame, gray_image=False)
+
+            # Show rectangle
+            if show_drawing:
+                point1 = (0 if point1[0] < 0 else
+                          (point1[0]
+                           if point1[0] < frame.shape[1] else frame.shape[1]),
+                          0 if point1[1] < 0 else
+                          (point1[1]
+                           if point1[1] < frame.shape[0] else frame.shape[0]))
+
+                cv2.rectangle(frame, point0, point1, blue_color, 2)
+            cv2.imshow(window_name, frame)
+
+            keyboard = cv2.waitKey(1)
+            # Pressed Enter or Space to cunsume
+            if keyboard in [13, 32]:
+                drawing = False
+                cv2.destroyAllWindows()
+                break
+
+            # Pressed C or Esc to cancel selection
+            elif keyboard in [ord('c'), ord('C'), 27]:
+                point0 = (0, 0)
+                point1 = (0, 0)
+
+            # Pressed r to reset video timer
+            elif keyboard in [ord('r'), ord('R')]:
+                video_capture.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+
+            elif keyboard in [ord('q')]:
+                i_frame -= fps * 30
+                video_capture.set(cv2.CAP_PROP_POS_FRAMES, i_frame)
+
+            elif keyboard in [ord('e')]:
+                i_frame += fps * 30
+                video_capture.set(cv2.CAP_PROP_POS_FRAMES, i_frame)
+
         cv2.destroyAllWindows()
+        return point0, point1
+
+    def select_window(self, video_capture, start_frame: int = 0):
+        video_capture.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+        _, image = video_capture.read()
+        for variable in self.variable_windows:
+            point0,point1 = self._build_selection_window(
+                video_capture,window_name=f"Select {variable}",
+                start_frame=start_frame,
+                )
+            if (point0, point1) == ((0, 0), (0, 0)):
+                point1 = image.shape[:2:][::-1]
+            self.variable_windows[variable] = (point0, point1)
 
     def check_process(
         self,
@@ -172,16 +253,20 @@ class PreProcessor:
     def strict(self, image: np.ndarray) -> np.ndarray:
         images = {}
         for variable, window in self.variable_windows.items():
-            x, y, dx, dy = window
-            images[variable] = image[y:y + dy, x:x + dx]
+            (x0, y0), (x1, y1) = window
+            X, Y = (x0, x1), (y0, y1)
+            x0, x1 = min(X), max(X)
+            y0, y1 = min(Y), max(Y)
+
+            images[variable] = image[y0:y1, x0:x1]
         return images
 
-    def process(self, image: np.ndarray) -> np.ndarray:
+    def process(self, image: np.ndarray, gray_image=True) -> np.ndarray:
         raise NotImplementedError
 
     def __init__(self, variables):
         all_fields = dict(self.__class__.__dict__)
-        self._parametr_configurations = {
+        self.parametr_configurations = {
             key: value
             for key, value in all_fields.items()
             if key[0].isupper()
@@ -189,7 +274,7 @@ class PreProcessor:
         self.parametrs = {
             key: min(value)
             for key,
-            value in self._parametr_configurations.items()
+            value in self.parametr_configurations.items()
         }
         self.variable_windows = {variable: 0 for variable in variables}
 
@@ -209,24 +294,36 @@ class PostProcessor:
     _rules = dict(re_rule=None, min_rule=None, max_rule=None)
     active_checks_order = {}
 
-    def check(self, image, raw_value, rules):
+    def check(self, image, raw_value, rules, inside_parametrs={}):
         pattern_check = self.pattern(raw_value, **rules)
         if pattern_check is not None: return 'OK', pattern_check
 
+        self._raw_value = raw_value
         self._rules = rules
         self._image = image
-        self._raw_value = raw_value
+
+        self._inside_parametrs = inside_parametrs
+
         for check_name, check_func in self.active_checks_order.items():
             check_result = check_func(self)
             result = self.pattern(check_result, **rules)
             if result is not None: return check_name, result
-        return 'FULL', None
+        return 'error', None
 
     @staticmethod
     def _check_type(func=None, get=False, checks={}):
         if func is not None: checks.update({func.__name__: func})
         if get: return checks
         return func
+
+    @_check_type
+    def inner_processor_check(self) -> list[str]:
+        processed_image = self.inner_processor(self._image)
+
+        raw_value = [
+            value for _, value, _ in self._reader.readtext(processed_image)
+        ]
+        return raw_value
 
     def __init__(
         self,
@@ -246,12 +343,3 @@ class PostProcessor:
 
     def reload_processor(self, processor):
         self.inner_processor = copy.deepcopy(processor)
-
-    @_check_type
-    def inner_processor_check(self) -> list[str]:
-        processed_image = self.inner_processor(self._image)
-
-        raw_value = [
-            value for _, value, _ in self._reader.readtext(processed_image)
-        ]
-        return raw_value
