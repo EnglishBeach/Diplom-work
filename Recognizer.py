@@ -24,8 +24,8 @@ EXP_PATH, VIDEO_NAME,DATA_NAME = '', '',''
 
 pattern = r'-?\d{1,3}\.\d'
 variable_patterns = {
-    'Viscosity': dict(re_rule=pattern, ),
-    'Temperature': dict(re_rule=pattern, ),
+    'Viscosity': dict(re_rule=pattern,min_rule=30,max_rule=230 ),
+    'Temperature': dict(re_rule=pattern,min_rule=12,max_rule=45  ),
 }
 
 # %%
@@ -79,7 +79,7 @@ print(
     '   Ecs/C - cancel selection',
     sep='\n',
 )
-processor.select_window(CAP,start_frame=100)
+processor.select_window(CAP)
 processor.check_process(CAP)
 
 
@@ -171,15 +171,15 @@ for i_frame in frame_line:
         mark, result = checker.check(image=var_image,
                                raw_value=raw_value,
                                rules=rules)
-        if mark == 'error':
-            # processor.configure_process(CAP,start_frame=i_frame)
-            processor.select_window(CAP,start_frame=i_frame)
-            # processor.check_process(CAP,start_frame=i_frame)
-            checker.reload_processor(processor)
-            mark, result = checker.check(image=var_image,
-                        raw_value=raw_value,
-                        rules=rules)
-            mark= f'*{mark}'
+        # if mark == 'error':
+        #     # processor.configure_process(CAP,start_frame=i_frame)
+        #     processor.select_window(CAP,start_frame=i_frame)
+        #     # processor.check_process(CAP,start_frame=i_frame)
+        #     checker.reload_processor(processor)
+        #     mark, result = checker.check(image=var_image,
+        #                 raw_value=raw_value,
+        #                 rules=rules)
+        #     mark= f'*{mark}'
         i_text[var] = result
         i_text[var + '_verbose'] = mark
 
