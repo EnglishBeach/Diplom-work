@@ -293,22 +293,22 @@ class PreProcessor:
 class PostProcessor:
     _image = None
     _raw_value = []
-    _rules = dict(re_rule=None, min_rule=None, max_rule=None)
-    active_checks_order = {}
+    current_pattern = ''
 
-    def check(self, image, raw_value, rules, inside_parametrs={}):
-        pattern_check = self.pattern(raw_value, **rules)
-        if pattern_check is not None: return 'OK', pattern_check
+    def check(self, image, raw_value, pattern, inside_parametrs={}):
+        self.current_pattern = pattern
+        pattern_result = self.pattern_check(raw_value, pattern)
+        if pattern_result is not None: return 'OK', pattern_result
 
         self._raw_value = raw_value
-        self._rules = rules
         self._image = image
-
         self._inside_parametrs = inside_parametrs
 
         for check_name, check_func in self.active_checks_order.items():
+            print('\n',check_name)
+            input()
             check_result = check_func(self)
-            result = self.pattern(check_result, **rules)
+            result = self.pattern_check(check_result, pattern)
             if result is not None: return check_name, result
         return 'error', None
 
@@ -321,22 +321,18 @@ class PostProcessor:
     @_check_type
     def inner_processor_check(self) -> list[str]:
         processed_image = self.inner_processor(self._image)
-
+        print('Inner=', self.inner_processor['Blur'])
         raw_value = [
-            value for _, value, _ in self._reader.readtext(processed_image)
+            value for _, value, _ in self.reader.readtext(processed_image)
         ]
         return raw_value
 
-    def __init__(
-        self,
-        processor: PreProcessor,
-        reader,
-    ):
+    def __init__(self, processor: PreProcessor, reader):
         self.inner_processor = copy.deepcopy(processor)
-        self._reader = reader
+        self.reader = reader
         self.active_checks_order = self._check_type(get=True)
 
-    def pattern(self, value: list) -> float|None:
+    def pattern_check(self, value: list, pattern) -> float|None:
         raise NotImplementedError
 
     @property
@@ -346,10 +342,11 @@ class PostProcessor:
     def reload_processor(self, processor):
         self.inner_processor = copy.deepcopy(processor)
 
-def save_data(data:pd.DataFrame,path):
+
+def save_data(data: pd.DataFrame, path):
     print('Saving...')
     if os.path.isfile(path):
-        path = path[-4:]+'_new.csv'
-        print('Error - new save path:\n',path)
+        path = path[-4:] + '_new.csv'
+        print('Error - new save path:\n', path)
     data.to_csv(path)
     print('Saved.')

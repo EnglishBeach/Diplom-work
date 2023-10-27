@@ -13,19 +13,18 @@ from tqdm import tqdm
 import cv2
 import easyocr
 
-from recognizer_modules import PreProcessor, PostProcessor,save_data
+from recognizer_modules import PreProcessor, PostProcessor, save_data
 
-EXP_PATH, VIDEO_NAME,DATA_NAME = '', '',''
+EXP_PATH, VIDEO_NAME, DATA_NAME = '', '', ''
 
 # %%
 ## Inputs
-# EXP_PATH = r'Experiments\MultiplyTemperature\Exp0(0)'
-# VIDEO_NAME = r"\Exp0_up1.avi"
+EXP_PATH = r'Experiments\MultiplyTemperature\Exp0(0)'
+VIDEO_NAME = r"\Exp0_up1.avi"
 
-pattern = r'-?\d{1,3}\.\d'
 variable_patterns = {
-    'Viscosity': dict(re_rule=pattern,min_rule=30,max_rule=230 ),
-    'Temperature': dict(re_rule=pattern,min_rule=12,max_rule=45  ),
+    'Viscosity': r'-?\d{1,3}\.\d',
+    'Temperature': r'-?\d{1,3}\.\d',
 }
 
 # %%
@@ -46,6 +45,7 @@ print(
     sep='\n',
 )
 
+
 # %%
 ## PreProcessor settings
 class ImageProcessor(PreProcessor):
@@ -61,6 +61,7 @@ class ImageProcessor(PreProcessor):
             image = cv2.bitwise_not(image)
 
         return image
+
 
 CAP = cv2.VideoCapture(EXP_PATH + VIDEO_NAME)
 
@@ -87,37 +88,29 @@ processor.check_process(CAP)
 ## PostProcessor settings
 class ValuePostProcessor(PostProcessor):
 
-    def pattern(
-        self,
-        value: list,
-        re_rule=None,
-        min_rule=None,
-        max_rule=None,
-    ) -> float|None:
+    def pattern_check(self, value: list, pattern: str):
 
         if value == []: return None
         value = value[0]
         value = value.replace(',', '.')
-        regexp_cond = len(re.findall(re_rule, value)) == 1
-        try:
-            value = float(value)
-        except ValueError:
-            return None
-        min_cond = value <= min_rule if min_rule is not None else True
-        max_cond = value >= max_rule if max_rule is not None else True
-
-        return value if regexp_cond and min_cond and max_cond else None
+        if re.findall(pattern, value) == 1:
+            try:
+                result = float(value)
+                return result
+            except ValueError:
+                print('Strange error')
+                return None
 
     @PostProcessor._check_type
     def processor_sweep(self) -> list[str]:
-        for i in range(1, 20):
+        for i in range(1, 50):
             self.inner_processor['Blur'] = i
+            print(self.inner_processor['Blur'])
             processed_img = self.inner_processor(self._image)
             raw_value = [
-                value for _, value, _ in self._reader.readtext(processed_img)
+                value for _, value, _ in self.reader.readtext(processed_img)
             ]
-
-            result = self.pattern(raw_value, **self._rules)
+            result = self.pattern_check(raw_value, self.current_pattern)
             if result is not None: return raw_value
         return []
 
@@ -140,9 +133,8 @@ class ValuePostProcessor(PostProcessor):
 print('Starting recognizer...')
 reader = easyocr.Reader(['en'])
 checker = ValuePostProcessor(reader=reader, processor=processor)
-print([i for i in checker.all_checks])
 # checker.active_checks_order = {check:checker.all_checks[check] for check in ['inner_processor_check','value_combine']}
-
+print([i for i in checker.active_checks_order])
 # %%
 ## Recognize
 input_fps = input('Input number of frames per second: ')
@@ -164,13 +156,13 @@ for i_frame in frame_line:
     processed_frame = processor(frame)
     stricted_images = processor.strict(processed_frame)
 
-    for var, rules in variable_patterns.items():
+    for var, pattern in variable_patterns.items():
         var_image = stricted_images[var]
         raw_value = [value for _, value, _ in reader.readtext(var_image)]
 
         mark, result = checker.check(image=var_image,
                                raw_value=raw_value,
-                               rules=rules)
+                               pattern=pattern)
         # if mark == 'error':
         #     # processor.configure_process(CAP,start_frame=i_frame)
         #     processor.select_window(CAP,start_frame=i_frame)
@@ -188,8 +180,7 @@ for i_frame in frame_line:
         frame_line.set_description(f'Errors: {errors: >4}')
     data.append(i_text)
 
-
 # %%
 ## Saving
 df = pd.DataFrame(data)
-save_data(df,EXP_PATH + DATA_NAME)
+save_data(df, EXP_PATH + DATA_NAME)
