@@ -98,7 +98,7 @@ class ValuePostProcessor(PostProcessor):
                 result = float(value)
                 return result
             except ValueError:
-                print('Strange error')
+                print('\nStrange error',re.findall(pattern, value)[0])
                 return None
 
     @PostProcessor._check_type
