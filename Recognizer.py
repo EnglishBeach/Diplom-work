@@ -5,7 +5,6 @@
 # %%
 ## Imports
 print("Importing...")
-
 import re
 import os
 import pandas as pd
@@ -34,7 +33,6 @@ if EXP_PATH + VIDEO_NAME == '':
     input_path = ''
     while (input_path == '') and (not os.path.isfile(EXP_PATH + VIDEO_NAME)):
         input_path = input(f"Input video path: ")
-
     path_list = (input_path).split('\\')
     EXP_PATH = '\\'.join(path_list[:-1])
     VIDEO_NAME = '\\' + path_list[-1]
@@ -47,7 +45,6 @@ print(
     EXP_PATH + DATA_NAME,
     sep='\n',
 )
-
 
 # %%
 ## PreProcessor settings
@@ -65,7 +62,8 @@ class ImageProcessor(PreProcessor):
 
         return image
 
-CAP = cv2.VideoCapture(EXP_PATH + DATA_NAME)
+CAP = cv2.VideoCapture(EXP_PATH + VIDEO_NAME)
+
 FPS = int(CAP.get(cv2.CAP_PROP_FPS))
 LENTH = int(CAP.get(cv2.CAP_PROP_FRAME_COUNT) / FPS)
 CAP.set(cv2.CAP_PROP_POS_FRAMES, 0)
