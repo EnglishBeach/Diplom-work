@@ -1,5 +1,7 @@
+import os
 import copy
 import numpy as np
+import pandas as pd
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
@@ -343,3 +345,11 @@ class PostProcessor:
 
     def reload_processor(self, processor):
         self.inner_processor = copy.deepcopy(processor)
+
+def save_data(data:pd.DataFrame,path):
+    print('Saving...')
+    if os.path.isfile(path):
+        path = path[-4:]+'_new.csv'
+        print('Error - new save path:\n',path)
+    data.to_csv(path)
+    print('Saved.')

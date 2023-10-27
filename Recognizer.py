@@ -5,30 +5,53 @@
 # %%
 ## Imports
 print("Importing...")
+
 import re
-import time
-import numpy as np
+import os
 import pandas as pd
 from tqdm import tqdm
-import matplotlib.pyplot as plt
 
 import cv2
 import easyocr
 
-from matplotlib.backends.backend_pdf import PdfPages
-from recognizer_modules import PreProcessor, PostProcessor
+from recognizer_modules import PreProcessor, PostProcessor,save_data
 
+EXP_PATH, VIDEO_NAME,DATA_NAME = '', '',''
 
 # %%
 ## Inputs
-VIDEO_PATH = r"Examples\Test\Test_window.avi"
-# VIDEO_PATH = None
-rules = dict(re_rule=r'-?\d{1,3}\.\d', )
-variable_patterns = {'Viscosity': rules, 'Temperature': rules}
+# EXP_PATH = r'Experiments\MultiplyTemperature\Exp0(0)'
+# VIDEO_NAME = r"\Exp0_up1.avi"
+
+pattern = r'-?\d{1,3}\.\d'
+variable_patterns = {
+    'Viscosity': dict(re_rule=pattern, ),
+    'Temperature': dict(re_rule=pattern, ),
+}
+
+# %%
+if EXP_PATH + VIDEO_NAME == '':
+    input_path = ''
+    while (input_path == '') and (not os.path.isfile(EXP_PATH + VIDEO_NAME)):
+        input_path = input(f"Input video path: ")
+
+    path_list = (input_path).split('\\')
+    EXP_PATH = '\\'.join(path_list[:-1])
+    VIDEO_NAME = '\\' + path_list[-1]
+    DATA_NAME = VIDEO_NAME.split('.')[0] + '.csv'
+
+print(
+    'Recognize path:',
+    EXP_PATH + VIDEO_NAME,
+    f'Data save path:',
+    EXP_PATH + DATA_NAME,
+    sep='\n',
+)
+
 
 # %%
 ## PreProcessor settings
-class ImagePreProcessor(PreProcessor):
+class ImageProcessor(PreProcessor):
     Blur = range(1, 50)
 
     def process(self, image, gray_image=True):
@@ -42,20 +65,14 @@ class ImagePreProcessor(PreProcessor):
 
         return image
 
-
-if VIDEO_PATH is None:
-    input_path = ''
-    while input_path == '':
-        input_path = input(f"Input video path: ")
-    VIDEO_PATH = input_path
-
-CAP = cv2.VideoCapture(VIDEO_PATH)
+CAP = cv2.VideoCapture(EXP_PATH + DATA_NAME)
 FPS = int(CAP.get(cv2.CAP_PROP_FPS))
 LENTH = int(CAP.get(cv2.CAP_PROP_FRAME_COUNT) / FPS)
 CAP.set(cv2.CAP_PROP_POS_FRAMES, 0)
 _, START_FRAME = CAP.read()
 
-processor = ImagePreProcessor([i for i in variable_patterns])
+processor = ImageProcessor([i for i in variable_patterns])
+print('Configurate image processing')
 processor.configure_process(CAP)
 print(
     'Press:',
@@ -64,7 +81,7 @@ print(
     '   Ecs/C - cancel selection',
     sep='\n',
 )
-processor.select_window(CAP)
+processor.select_window(CAP,start_frame=100)
 processor.check_process(CAP)
 
 
@@ -157,9 +174,9 @@ for i_frame in frame_line:
                                raw_value=raw_value,
                                rules=rules)
         if mark == 'error':
-            processor.configure_process(CAP,start_frame=i_frame)
+            # processor.configure_process(CAP,start_frame=i_frame)
             processor.select_window(CAP,start_frame=i_frame)
-            processor.check_process(CAP,start_frame=i_frame)
+            # processor.check_process(CAP,start_frame=i_frame)
             checker.reload_processor(processor)
             mark, result = checker.check(image=var_image,
                         raw_value=raw_value,
@@ -175,5 +192,6 @@ for i_frame in frame_line:
 
 
 # %%
-## Print
-print(pd.DataFrame(data))
+## Saving
+df = pd.DataFrame(data)
+save_data(df,EXP_PATH + DATA_NAME)
