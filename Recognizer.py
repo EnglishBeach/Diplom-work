@@ -35,7 +35,7 @@ if EXP_PATH + VIDEO_NAME == '':
     path_list = (input_path).split('\\')
     EXP_PATH = '\\'.join(path_list[:-1])
     VIDEO_NAME = '\\' + path_list[-1]
-    DATA_NAME = VIDEO_NAME.split('.')[1] + '.csv'
+DATA_NAME = VIDEO_NAME.split('.')[0] + '.csv'
 
 print(
     'Recognize path:',
