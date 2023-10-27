@@ -1,4 +1,5 @@
 import os
+import re
 import copy
 import numpy as np
 import pandas as pd
@@ -291,60 +292,81 @@ class PreProcessor:
 
 
 class PostProcessor:
-    _image = None
-    _raw_value = []
-    current_pattern = ''
+    pattern = ''
+    inside_info = {}
+    input_value = []
+    image = []
 
-    def check(self, image, raw_value, pattern, inside_parametrs={}):
-        self.current_pattern = pattern
-        pattern_result = self.pattern_check(raw_value, pattern)
-        if pattern_result is not None: return 'OK', pattern_result
-
-        self._raw_value = raw_value
-        self._image = image
-        self._inside_parametrs = inside_parametrs
-
+    def check(self, input_value, pattern, image, inside_info={}):
+        self.pattern = pattern
+        pattern_check = self.isOK(input_value)
+        if pattern_check is not None: return 'OK', pattern_check
+        self.image = image
+        self.inside_parametrs = inside_info
         for check_name, check_func in self.active_checks_order.items():
-
             check_result = check_func(self)
-            result = self.pattern_check(check_result, pattern)
-            if result is not None: return check_name, result
+            if check_result is not None: return check_name, check_result
         return 'error', None
 
+    def convert(self, value: str):
+        raise NotImplementedError
+
     @staticmethod
-    def _check_type(func=None, get=False, checks={}):
+    def check_type(func=None, get=False, checks={}):
         if func is not None: checks.update({func.__name__: func})
         if get: return checks
         return func
 
-    @_check_type
-    def inner_processor_check(self) -> list[str]:
-        processed_image = self.inner_processor(self._image)
+    def isOK(self, raw_value: list):
+        if raw_value == []: return None
+        value = raw_value[0]
+        if re.match(self.pattern, value):
+            return self.convert(value)
+
+    @check_type
+    def OK_inner(self):
+        processed_image = self.inner_processor(self.image)
         raw_value = [
             value for _, value, _ in self.reader.readtext(processed_image)
         ]
-        return raw_value
+        return self.isOK(raw_value)
 
-    def __init__(self, processor: PreProcessor, reader):
-        self.inner_processor = copy.deepcopy(processor)
-        self.reader = reader
-        self.active_checks_order = self._check_type(get=True)
-
-    def pattern_check(self, value: list, pattern) -> float|None:
-        raise NotImplementedError
+    def __init__(self, processor: PreProcessor, reader: cv2.VideoCapture):
+        self.inner_processor: PreProcessor = copy.deepcopy(processor)
+        self.reader: cv2.VideoCapture = reader
+        self.active_checks_order = self.check_type(get=True)
 
     @property
     def all_checks(self):
-        return self._check_type(get=True)
+        return self.check_type(get=True)
 
     def reload_processor(self, processor):
         self.inner_processor = copy.deepcopy(processor)
 
 
-def save_data(data: pd.DataFrame, path):
-    print('Saving...')
-    if os.path.isfile(path):
-        path = path[-4:] + '_new.csv'
-        print('Error - new save path:\n', path)
-    data.to_csv(path)
-    print('Saved.')
+class PathContainer:
+
+    def __init__(self, video_path='', data_path='', data_format='csv'):
+        if video_path == '':
+            while (video_path == '') or (not os.path.isfile(video_path)):
+                video_path = input(f"Input video path: ")
+        path_list = (video_path).split('\\')
+        folder_path = '\\'.join(path_list[:-1])
+        video_name = path_list[-1]
+        video_path = video_path.replace('\\', '\\')
+
+        if data_path == '':
+            data_name = video_name.split('.')[0]
+            while os.path.isfile(f'{folder_path}\\{data_name}.{data_format}'):
+                data_name = input(f"Data exists, input new name: ")
+            data_path = f'{folder_path}\\{data_name}.{data_format}'
+
+        self.data_path = data_path
+        self.video_path = video_path
+
+    def print_paths(self):
+        print(
+            f'Video    : {self.video_path}',
+            f'Data path: {self.data_path}',
+            sep='\n',
+        )

@@ -5,46 +5,22 @@
 # %%
 ## Imports
 print("Importing...")
-import re
-import os
 import pandas as pd
 from tqdm import tqdm
 
 import cv2
 import easyocr
 
-from recognizer_modules import PreProcessor, PostProcessor, save_data
-
-EXP_PATH, VIDEO_NAME, DATA_NAME = '', '', ''
+from recognizer_modules import PreProcessor, PostProcessor, PathContainer
 
 # %%
 ## Inputs
-EXP_PATH = r'Experiments\MultiplyTemperature\Exp1(2.5)'
-VIDEO_NAME = r"\Exp1_up.avi"
-
-variable_patterns = {
-    'Viscosity': r'-?\d{1,3}\.\d',
-    'Temperature': r'-?\d{1,3}\.\d',
+PATHS = PathContainer()
+PATHS.print_paths()
+VARIABLE_PATTERNS = {
+    'Viscosity': r'-?\d{1,3}[\.,]\d',
+    'Temperature': r'-?\d{1,3}[\.,]\d',
 }
-
-# %%
-if EXP_PATH + VIDEO_NAME == '':
-    input_path = ''
-    while (input_path == '') and (not os.path.isfile(EXP_PATH + VIDEO_NAME)):
-        input_path = input(f"Input video path: ")
-    path_list = (input_path).split('\\')
-    EXP_PATH = '\\'.join(path_list[:-1])
-    VIDEO_NAME = '\\' + path_list[-1]
-DATA_NAME = VIDEO_NAME.split('.')[0] + '.csv'
-
-print(
-    'Recognize path:',
-    EXP_PATH + VIDEO_NAME,
-    f'Data save path:',
-    EXP_PATH + DATA_NAME,
-    sep='\n',
-)
-
 
 # %%
 ## PreProcessor settings
@@ -63,14 +39,14 @@ class ImageProcessor(PreProcessor):
         return image
 
 
-CAP = cv2.VideoCapture(EXP_PATH + VIDEO_NAME)
+CAP = cv2.VideoCapture(PATHS.video_path)
 
 FPS = int(CAP.get(cv2.CAP_PROP_FPS))
 LENTH = int(CAP.get(cv2.CAP_PROP_FRAME_COUNT) / FPS)
 CAP.set(cv2.CAP_PROP_POS_FRAMES, 0)
 _, START_FRAME = CAP.read()
 
-processor = ImageProcessor([i for i in variable_patterns])
+processor = ImageProcessor([i for i in VARIABLE_PATTERNS])
 print('Configurate image processing')
 processor.configure_process(CAP)
 print(
@@ -78,6 +54,7 @@ print(
     '   Enter - save selection and continue',
     '   R     - reset video timer',
     '   Ecs/C - cancel selection',
+    '   q/e   - time move',
     sep='\n',
 )
 processor.select_window(CAP)
@@ -88,52 +65,49 @@ processor.check_process(CAP)
 ## PostProcessor settings
 class ValuePostProcessor(PostProcessor):
 
-    def pattern_check(self, value: list, pattern: str):
-
-        if value == []: return None
-        value = value[0]
+    def convert(self, value: str):
         value = value.replace(',', '.')
-        if len(re.findall(pattern, value)) == 1:
-            try:
-                result = float(value)
-                return result
-            except ValueError:
-                print('\nStrange error',re.findall(pattern, value)[0])
-                return None
+        try:
+            result = float(value)
+            return result
+        except:
+            return None
 
-    @PostProcessor._check_type
-    def processor_sweep(self) -> list[str]:
+    @PostProcessor.check_type
+    def image_sweep_check(self) -> list[str]:
         for i in range(1, 50):
             self.inner_processor['Blur'] = i
-            processed_img = self.inner_processor(self._image)
+            processed_img = self.inner_processor(self.image)
             raw_value = [
                 value for _, value, _ in self.reader.readtext(processed_img)
             ]
-            result = self.pattern_check(raw_value, self.current_pattern)
-            if result is not None: return raw_value
-        return []
+            result = self.isOK(raw_value)
+            if result is not None: return result
 
-    @PostProcessor._check_type
-    def value_combine(self) -> list[str]:
-        parts = len(self._raw_value)
+    @PostProcessor.check_type
+    def combine_check(self) -> list[str]:
+        parts = len(self.input_value)
         if parts == 1:
-            value = self._raw_value[0]
-            result = value[:3] + '.' + value[4:5]
+            value = self.input_value[0]
+            combined_value = value[:3] + '.' + value[4:5]
 
         elif parts == 2:
-            result = '.'.join(self._raw_value)
+            combined_value = '.'.join(self.input_value)
 
         elif parts == 3:
-            result = f'{self._raw_value[0]}.{self._raw_value[2]}'
+            combined_value = f'{self.input_value[0]}.{self.input_value[2]}'
 
-        return [result]
+        return self.isOK(combined_value)
 
 
 print('Starting recognizer...')
 reader = easyocr.Reader(['en'])
 checker = ValuePostProcessor(reader=reader, processor=processor)
-# checker.active_checks_order = {check:checker.all_checks[check] for check in ['inner_processor_check','value_combine']}
-print([i for i in checker.active_checks_order])
+# checker.active_checks_order =
+# {check:checker.all_checks[check]
+# for check in ['inner_processor_check','value_combine']}
+print('Active checks:\n', [i for i in checker.active_checks_order])
+
 # %%
 ## Recognize
 input_fps = input('Input number of frames per second: ')
@@ -146,7 +120,7 @@ print('Recognizing:')
 errors = 0
 frame_line = tqdm(iterable=range(0, FPS * LENTH, int(FPS / read_fps)))
 frame_line.set_description(f'Errors: {errors: >4}')
-data = []
+DATA = []
 
 for i_frame in frame_line:
     CAP.set(cv2.CAP_PROP_POS_FRAMES, i_frame)
@@ -155,13 +129,16 @@ for i_frame in frame_line:
     processed_frame = processor(frame)
     stricted_images = processor.strict(processed_frame)
 
-    for var, pattern in variable_patterns.items():
+    for var, pattern in VARIABLE_PATTERNS.items():
         var_image = stricted_images[var]
         raw_value = [value for _, value, _ in reader.readtext(var_image)]
 
-        mark, result = checker.check(image=var_image,
-                               raw_value=raw_value,
-                               pattern=pattern)
+        verbose, result = checker.check(
+            input_value=raw_value,
+            pattern=pattern,
+            image = var_image,
+            )
+
         # if mark == 'error':
         #     # processor.configure_process(CAP,start_frame=i_frame)
         #     processor.select_window(CAP,start_frame=i_frame)
@@ -173,14 +150,14 @@ for i_frame in frame_line:
         #     mark= f'*{mark}'
 
         i_text[var] = result
-        i_text[var + '_verbose'] = mark
+        i_text[var + '_verbose'] = verbose
 
     if None in i_text.values():
         errors += 1
         frame_line.set_description(f'Errors: {errors: >4}')
-    data.append(i_text)
+    DATA.append(i_text)
 
 # %%
 ## Saving
-df = pd.DataFrame(data)
-save_data(df, EXP_PATH + DATA_NAME)
+df = pd.DataFrame(DATA)
+df.to_csv(PATHS.data_path)
