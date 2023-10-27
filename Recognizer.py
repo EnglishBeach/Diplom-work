@@ -19,8 +19,8 @@ EXP_PATH, VIDEO_NAME, DATA_NAME = '', '', ''
 
 # %%
 ## Inputs
-EXP_PATH = r'Experiments\MultiplyTemperature\Exp0(0)'
-VIDEO_NAME = r"\Exp0_up1.avi"
+EXP_PATH = r'Experiments\MultiplyTemperature\Exp1(2.5)'
+VIDEO_NAME = r"\Exp1_up.avi"
 
 variable_patterns = {
     'Viscosity': r'-?\d{1,3}\.\d',
@@ -93,7 +93,7 @@ class ValuePostProcessor(PostProcessor):
         if value == []: return None
         value = value[0]
         value = value.replace(',', '.')
-        if re.findall(pattern, value) == 1:
+        if len(re.findall(pattern, value)) == 1:
             try:
                 result = float(value)
                 return result
@@ -105,7 +105,6 @@ class ValuePostProcessor(PostProcessor):
     def processor_sweep(self) -> list[str]:
         for i in range(1, 50):
             self.inner_processor['Blur'] = i
-            print(self.inner_processor['Blur'])
             processed_img = self.inner_processor(self._image)
             raw_value = [
                 value for _, value, _ in self.reader.readtext(processed_img)
@@ -172,6 +171,7 @@ for i_frame in frame_line:
         #                 raw_value=raw_value,
         #                 rules=rules)
         #     mark= f'*{mark}'
+
         i_text[var] = result
         i_text[var + '_verbose'] = mark
 

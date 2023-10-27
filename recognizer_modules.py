@@ -305,8 +305,7 @@ class PostProcessor:
         self._inside_parametrs = inside_parametrs
 
         for check_name, check_func in self.active_checks_order.items():
-            print('\n',check_name)
-            input()
+
             check_result = check_func(self)
             result = self.pattern_check(check_result, pattern)
             if result is not None: return check_name, result
@@ -321,7 +320,6 @@ class PostProcessor:
     @_check_type
     def inner_processor_check(self) -> list[str]:
         processed_image = self.inner_processor(self._image)
-        print('Inner=', self.inner_processor['Blur'])
         raw_value = [
             value for _, value, _ in self.reader.readtext(processed_image)
         ]
