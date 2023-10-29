@@ -48,7 +48,7 @@ _, START_FRAME = CAP.read()
 
 processor = ImageProcessor([i for i in VARIABLE_PATTERNS])
 print('Configurate image processing')
-processor.configure_process(CAP)
+
 print(
     'Press:',
     '   Enter - save selection and continue',
@@ -57,8 +57,12 @@ print(
     '   q/e   - time move',
     sep='\n',
 )
-processor.select_window(CAP)
-processor.check_process(CAP)
+configure = True
+while configure:
+    processor.configure_process(CAP)
+    processor.select_window(CAP)
+    processor.check_process(CAP)
+    configure = False if input ('Continue (y for yes)? ')=='y' else True
 
 
 # %%
@@ -86,15 +90,16 @@ class ValuePostProcessor(PostProcessor):
 
     @PostProcessor.check_type
     def combine_check(self) -> list[str]:
-        parts = len(self.input_value)
-        if parts == 1:
+        n_parts = len(self.input_value)
+        combined_value =[]
+        if n_parts == 1:
             value = self.input_value[0]
             combined_value = value[:3] + '.' + value[4:5]
 
-        elif parts == 2:
+        elif n_parts == 2:
             combined_value = '.'.join(self.input_value)
 
-        elif parts == 3:
+        elif n_parts == 3:
             combined_value = f'{self.input_value[0]}.{self.input_value[2]}'
 
         return self.isOK(combined_value)
@@ -154,7 +159,7 @@ for i_frame in frame_line:
 
     if None in i_text.values():
         errors += 1
-        frame_line.set_description(f'Errors: {errors: >4}')
+        frame_line.set_description(f'{errors: >4} errors')
     DATA.append(i_text)
 
 # %%

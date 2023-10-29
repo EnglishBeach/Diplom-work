@@ -161,7 +161,8 @@ class PreProcessor:
 
             # Pressed r to reset video timer
             elif keyboard in [ord('r'), ord('R')]:
-                video_capture.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+                i_frame = start_frame
+                video_capture.set(cv2.CAP_PROP_POS_FRAMES, i_frame)
 
             elif keyboard in [ord('q')]:
                 i_frame -= fps * 30
