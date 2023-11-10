@@ -104,6 +104,11 @@ class ValuePostProcessor(PostProcessor):
 
         return self.isOK(combined_value)
 
+input_fps = input('Input number of frames per second: ')
+try:
+    read_fps = float(input_fps)
+except:
+    read_fps = 1
 
 print('Starting recognizer...')
 reader = easyocr.Reader(['en'])
@@ -115,12 +120,6 @@ print('Active checks:\n', [i for i in checker.active_checks_order])
 
 # %%
 ## Recognize
-input_fps = input('Input number of frames per second: ')
-try:
-    read_fps = float(input_fps)
-except:
-    read_fps = 1
-
 print('Recognizing:')
 errors = 0
 frame_line = tqdm(iterable=range(0, FPS * LENTH, int(FPS / read_fps)))
