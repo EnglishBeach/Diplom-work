@@ -164,4 +164,4 @@ for i_frame in frame_line:
 # %%
 ## Saving
 df = pd.DataFrame(DATA)
-df.to_csv(PATHS.data_path)
+df.to_csv(PATHS.data_path,index=0)
