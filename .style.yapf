@@ -1,5 +1,5 @@
 [style]
-column_limit = 80
+column_limit = 100
 spaces_before_comment=2
 
 NO_SPACES_AROUND_SELECTED_BINARY_OPERATORS = |
