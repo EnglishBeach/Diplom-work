@@ -1,9 +1,10 @@
+.vscode
+__pycache__
+
 **_env
-Video_process/Videos/**
-Video_process/Images/**
+
 **.mkv
 **.avi
 **.mp4
-.vscode
-__pycache__
+
 **copied
