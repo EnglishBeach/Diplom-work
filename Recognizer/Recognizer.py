@@ -18,7 +18,8 @@ from recognizer_modules import PreProcessor, PostProcessor, PathContainer
 PATHS = PathContainer()
 PATHS.print_paths()
 VARIABLE_PATTERNS = {
-    'Viscosity': r'-?\d{1,3}[\.,]\d',
+    # 'Viscosity': r'-?\d{1,3}[\.,]\d',
+    'Viscosity': r'-?\d{1,5}[\.,]?\d',
     'Temperature': r'-?\d{1,3}[\.,]\d',
 }
 
@@ -62,7 +63,7 @@ while configure:
     processor.configure_process(CAP)
     processor.select_window(CAP)
     processor.check_process(CAP)
-    configure = False if input ('Continue (y for yes)? ')=='y' else True
+    configure = False if input ('Continue (y or [n])? ')=='y' else True
 
 
 # %%
@@ -104,7 +105,7 @@ class ValuePostProcessor(PostProcessor):
 
         return self.isOK(combined_value)
 
-input_fps = input('Input number of frames per second: ')
+input_fps = input('FPS to recognize: ')
 try:
     read_fps = float(input_fps)
 except:
