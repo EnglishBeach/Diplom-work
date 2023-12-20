@@ -2,7 +2,6 @@ import os
 import re
 import copy
 import numpy as np
-import pandas as pd
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
@@ -268,7 +267,7 @@ class PreProcessor:
     def process(self, image: np.ndarray, gray_image=True) -> np.ndarray:
         raise NotImplementedError
 
-    def __init__(self, variables):
+    def __init__(self, variable_names):
         all_fields = dict(self.__class__.__dict__)
         self.parametr_configurations = {
             key: value
@@ -280,7 +279,7 @@ class PreProcessor:
             for key,
             value in self.parametr_configurations.items()
         }
-        self.variable_windows = {variable: 0 for variable in variables}
+        self.variable_windows = {variable: 0 for variable in variable_names}
 
     def __getitem__(self, item):
         return self.parametrs[item]
