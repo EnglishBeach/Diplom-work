@@ -1,3 +1,4 @@
+# %%
 import os
 import copy
 
@@ -9,21 +10,22 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-pd.set_option('mode.chained_assignment', None)
-plt.rc('xtick', labelsize=10)
-plt.rc('ytick', labelsize=10)
-plt.rc('font', size=10)  #controls default text size
-plt.rc('axes', titlesize=16)  #fontsize of the title
-plt.rc('axes', labelsize=15)  #fontsize of the x and y labels
-plt.rc('legend', fontsize=10)
-plt.rcParams["figure.figsize"] = (10, 7)
 
+# %matplotlib qt
+pd.set_option('mode.chained_assignment', None)
+plt.rc('xtick',labelsize=10)
+plt.rc('ytick',labelsize=10)
+plt.rc('font', size=10) #controls default text size
+plt.rc('axes', titlesize=16) #fontsize of the title
+plt.rc('axes', labelsize=15) #fontsize of the x and y labels
+plt.rc('legend', fontsize=10)
+plt.rcParams["figure.figsize"] = (10,7)
 
 def ask_continue():
-    res = None
+    res=None
     while res is None:
         ask = input('Continue [y] and n: ')
-        if ask in ['', 'y']:
+        if ask  in ['','y']:
             res = True
         elif ask in ['n']:
             res = False
@@ -31,7 +33,11 @@ def ask_continue():
             print('Incorrect input!')
     return res
 
+interactive = False
+save_png=True
 
+
+# %%
 class Experiment:
     d: pd.DataFrame = None
     folder = None
@@ -108,7 +114,7 @@ class Experiment:
         self.d = filter(self.d, **kwargs)
         return (filter.__name__, kwargs)
 
-
+# %%
 ## Functions
 def nu_D(time, x, y):
     # k = 1.380649 * 1e-23
@@ -177,6 +183,8 @@ def iqr_filter(data: pd.Series):
     return np.abs((data - data.median()) / iqr) < 1
 
 
+
+# %%
 ## Start plot
 verbose_colors = {
     'OK': 'g',
@@ -212,20 +220,23 @@ ax_T.set_ylabel('Temperature [C]', color='blue')
 ax_v.set_ylabel('Viscosity [cP]', color='red')
 plt.show()
 
+# %%
 ## Initial filter plot
 while True:
-    time_lim = ()
-    while len(time_lim) != 2:
+    time_lim=()
+    while len(time_lim)!=2:
         time_lim = input('Time lim (space as delimiter): ')
-        time_lim = [float(i) for i in time_lim.split(' ') if '' != i]
-        if len(time_lim) == 1: time_lim.append(np.inf)
+        time_lim=[float(i) for i in time_lim.split(' ') if '' != i]
+        if len(time_lim)==1: time_lim.append(np.inf)
 
-    y_lim = ()
-    while len(y_lim) != 2:
+    y_lim= ()
+    while len(y_lim)!=2:
         y_lim = input('Viscosity lim (space as delimiter): ')
-        y_lim = [float(i) for i in y_lim.split(' ')]
+        y_lim=[float(i) for i in y_lim.split(' ')]
 
-    exp.mask_filter(initial_filter, time=time_lim, y=y_lim, x=(12, 42))
+
+    exp.mask_filter(initial_filter,time=time_lim, y=y_lim, x=(12, 42))
+
 
     plot = exp.copy()
     fig, ax_v = plt.subplots()
@@ -251,9 +262,10 @@ while True:
 
     if ask_continue(): break
 
-tmp = exp.copy()
-# fig.savefig(f'{plot.folder}\Plots\\1{plot.experiment_name}_Initial.jpg',dpi =600)
+os.makedirs(f'{plot.folder}\Plots',exist_ok=True)
+if save_png: fig.savefig(f'{plot.folder}\Plots\\1{plot.name}_Initial.jpg',dpi =600)
 
+# %%
 ## Temperature plots
 plot = exp.copy()
 
@@ -280,6 +292,7 @@ sns.lineplot(
     label='median',
 )
 
+
 fig.canvas.manager.set_window_title('Temperature plots')
 fig.subplots_adjust(
     top=0.9,
@@ -292,10 +305,12 @@ fig.subplots_adjust(
 ax.set_title(f"{plot.name}: ({exp.info['w']}% mass)")
 ax.set_xlabel('Temperature [C]')
 ax.set_ylabel('Viscosity [cP]')
-plt.show()
 
-# fig.savefig(f'{plot.folder}\Plots\\2{plot.experiment_name}_Temperature.jpg',dpi =600)
+if interactive: plt.show()
+if save_png: fig.savefig(f'{plot.folder}\Plots\\2{plot.name}_Temperature.jpg',dpi =600)
 
+# %%
+## Filter
 exp.apply(C_to_K)
 exp.apply(nu_D)
 exp.apply(linearize)
@@ -305,6 +320,7 @@ exp.apply(delinearize)
 exp.apply(K_to_C)
 print('Filtered')
 
+# %%
 ## Diffusion plot
 plot = exp.copy()
 fig, ax = plt.subplots()
@@ -331,6 +347,7 @@ sns.lineplot(
     label='median',
 )
 
+
 fig.canvas.manager.set_window_title('Diffusion plot')
 fig.subplots_adjust(
     top=0.9,
@@ -343,16 +360,11 @@ fig.subplots_adjust(
 ax.set_title(f"{plot.name}: ({plot.info['w']}% mass)")
 ax.set_xlabel('Temperature [C]')
 ax.set_ylabel('D [m2/s]')
-plt.show()
 
-# fig.savefig(f'{plot.folder}\Plots\\3{plot.name}_Diffusion.jpg',dpi =600)
+if interactive: plt.show()
+if save_png: fig.savefig(f'{plot.folder}\Plots\\3{plot.name}_Diffusion.jpg',dpi =600)
 
-plot = exp.copy()
-plot.apply(C_to_K)
-plot.apply(linearize)
-plot.d
-
-
+# %%
 ## OLS plot
 def regress(data):
     reg = linear_model.LinearRegression(fit_intercept=True)
@@ -395,7 +407,7 @@ print(
 )
 
 fig, ax = plt.subplots()
-ax.set_yscale('log')
+# ax.set_yscale('log')
 ax.scatter(
     plot.d['x'],
     plot.d['y'],
@@ -424,17 +436,14 @@ fig.subplots_adjust(
     wspace=0.2,
 )
 ax.set_title(f"{plot.name}: ({plot.info['w']}% mass)")
-ax.set_xlabel('Temperature [C]')
-ax.set_ylabel('D [m2/s]')
+ax.set_xlabel('Temperature')
+ax.set_ylabel('D')
 plt.legend()
-plt.show()
 
-# fig.savefig(f'{plot.folder}\Plots\\4{plot.name}_OLS.jpg',dpi =600)
+if interactive: plt.show()
+if save_png: fig.savefig(f'{plot.folder}\Plots\\4{plot.name}_OLS.jpg',dpi =600)
 
-fig, ax = plt.subplots()
-ax.plot([1, 2, 3, 4, 5], np.array([1, 2, 3, 4, 5]) / 100)
-ax.set_yscale('log')
-
+# %%
 ## Comparation plot
 plot = exp.copy()
 
@@ -463,10 +472,11 @@ ax.set_title(f"{plot.name}: ({plot.info['w']}% mass)")
 ax.set_xlabel('Temperature [C]')
 ax.set_ylabel('D [m2/s]')
 ax.legend()
-plt.show()
 
-# fig.savefig(f'{plot.folder}\Plots\\5{plot.name}_Comparation.jpg',dpi =600)
+if interactive: plt.show()
+if save_png: fig.savefig(f'{plot.folder}\Plots\\5{plot.name}_Comparation.jpg',dpi =600)
 
+# %%
 ## Regression
 plot = exp.copy()
 plot.apply(C_to_K)
@@ -486,7 +496,13 @@ dD0 = (conf_int['x0'].max() - conf_int['x0'].min()) / 2
 conf_int['x'] = -8.314 * conf_int['x']
 dE = (conf_int['x'].max() - conf_int['x'].min()) / 2
 
-exp.set_info(D0=D0, d_D0=dD0, d_E=dE, f_statistic=result.fvalue, r2=result.rsquared)
+exp.set_info(
+    D0=D0,
+    d_D0=dD0,
+    d_E=dE,
+    f_statistic= result.fvalue,
+    r2=result.rsquared
+)
 print(
     f"Constants {plot.name} ({plot.info['w']}% mass):",
     f'E  = {E: >7.3e} ± {dE: <3.2e} J',
@@ -495,4 +511,5 @@ print(
 )
 print(result.summary2())
 
+# %%
 exp.save_hdf5()
