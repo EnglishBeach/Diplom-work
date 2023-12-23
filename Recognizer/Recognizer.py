@@ -18,8 +18,8 @@ from recognizer_modules import PreProcessor, PostProcessor, PathContainer
 PATHS = PathContainer()
 PATHS.print_paths()
 VARIABLE_PATTERNS = {
-    # 'Viscosity': r'-?\d{1,3}[\.,]\d',
-    'Viscosity': r'-?\d{1,5}[\.,]?\d',
+    'Viscosity': r'-?\d{1,3}[\.,]\d{1,2}',
+    # 'Viscosity': r'-?\d{1,5}[\.,]?\d',
     'Temperature': r'-?\d{1,3}[\.,]\d',
 }
 

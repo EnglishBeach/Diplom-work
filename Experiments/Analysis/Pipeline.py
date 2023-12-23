@@ -197,8 +197,8 @@ exp = Experiment()
 exp.load_csv()
 exp.set_info(
     compound=input('Compound: '),
-    rho=float(input('Rho: ')),
     w=float(input('W mass: ')),
+    rho=float(input('Rho: ')),
 )
 
 fig, ax_v = plt.subplots()
@@ -498,6 +498,7 @@ dE = (conf_int['x'].max() - conf_int['x'].min()) / 2
 
 exp.set_info(
     D0=D0,
+    E=E,
     d_D0=dD0,
     d_E=dE,
     f_statistic= result.fvalue,
