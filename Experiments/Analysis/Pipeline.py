@@ -4,7 +4,7 @@ from mylibs import tools, functions as f
 
 
 exp = tools.Experiment()
-exp.load_csv(*tools.input_path())
+exp.load_csv(*tools._split_path())
 tools.temporal_plot(exp)
 
 exp = tools.configurate_data(exp)

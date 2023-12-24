@@ -8,14 +8,16 @@ import seaborn as sns
 import statsmodels.api as sm
 from . import functions
 
-
 def input_path(path=''):
     while (path == '') or (not os.path.isfile(path)):
         path = input(f"Input data path: ")
+    return path
+
+def _split_path(path=''):
     path_list = (path).split('\\')
     folder = '\\'.join(path_list[:-1])
     name = path_list[-1].split('.')[0]
-    return path, folder, name
+    return folder, name
 
 
 class Experiment:
@@ -42,25 +44,25 @@ class Experiment:
         return log_wrapper
 
     @_log_wrapp
-    def load_csv(self, path, folder, name):
-        self.folder, self.name = folder, name
+    def load_csv(self, path):
+        self.folder, self.name = _split_path(path)
         self.d = pd.read_csv(path)
         self.d.rename(columns={'Temperature': 'x', 'Viscosity': 'y'}, inplace=True)
         return ('csv loaded', path)
 
     @_log_wrapp
-    def load_hdf5(self, path, folder, name):
-        self.folder, self.name = folder, name
+    def load_hdf5(self, path):
+        self.folder, self.name = _split_path(path)
         with pd.HDFStore(path) as file:
             self.d = file['data']
             self.info.update(file.get_storer('data').attrs.info)
             self.log.extend(file.get_storer('data').attrs.log)
         return ('hdf5 loaded', path)
 
-    def save_hdf5(self, path=None):
-        folder = path if path is not None else self.folder
-        assert folder is not None, 'Path not define'
-        file_path = f'{folder}\{self.name}.hdf5'
+    def save_hdf5(self, folder=None):
+        path = folder if folder is not None else self.folder
+        assert path is not None, 'Path not define'
+        file_path = f'{path}\{self.name}.hdf5'
         with pd.HDFStore(file_path) as file:
             file.put('data', self.d)
             file.get_storer('data').attrs.log = self.log
