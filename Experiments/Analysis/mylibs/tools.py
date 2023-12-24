@@ -60,7 +60,7 @@ class Experiment:
     def save_hdf5(self,path=None):
         folder = path if path is not None else self.folder
         assert  folder is not None, 'Path not define'
-        file_path = f'{self.folder}\{self.name}.hdf5'
+        file_path = f'{folder}\{self.name}.hdf5'
         with pd.HDFStore(file_path) as file:
             file.put('data', self.d)
             file.get_storer('data').attrs.log = self.log

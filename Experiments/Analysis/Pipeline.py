@@ -1,15 +1,78 @@
 import numpy as np
 import pandas as pd
 from mylibs import tools, functions as f
-import os
 
-for i in range(9):
 
-    exp = tools.Experiment()
-    path = f'D:\Works\Diplom-work\Experiments\OCM_viscosity\OCM{i}'
-    file = [file for file in os.listdir(path) if '.hdf5' in file][0]
-    exp.load_hdf5()
-    info, result, func = tools.regress(exp)
-    exp.set_info(**info)
-    os.remove(f'{path}\{file}')
-    exp.save_hdf5(f'{path}\{file}')
+exp = tools.Experiment()
+exp.load_csv(*tools.input_path())
+tools.temporal_base_plot(exp)
+
+exp = tools.temporal_config_plot(exp)
+
+tools.temperature_plot(
+    exp,
+    title='Viscosity',
+    xlabel='Temperature [C]',
+    ylabel='Viscosity [cP]',
+    interactive=True,
+)
+
+
+exp.apply(f.C_to_K)
+exp.apply(f.nu_D)
+exp.apply(f.linearize)
+exp.group_filter(f.iqr_filter)
+exp.apply(f.delinearize)
+exp.apply(f.K_to_C)
+print('Filtered')
+
+tools.temperature_plot(
+    exp,
+    title='Diffusion',
+    xlabel='Temperature [C]',
+    ylabel='D [m2/s]',
+    interactive=True,
+)
+
+info, result, func = tools.regress(exp)
+exp.set_info(**info)
+x = np.linspace(13, 42, 100) + 273.15
+ols_res = tools.Experiment(
+    pd.DataFrame({
+        'x': x, 'y': func(x), 'time': x * 0
+    }),
+    'interpolated',
+)
+
+ols_res.apply(f.K_to_C)
+
+exp.info
+
+tmp=exp.copy()
+
+exp2= exp.copy()
+ols_res2 = ols_res.copy()
+exp2.apply(f.C_to_K)
+ols_res2.apply(f.C_to_K)
+exp2.apply(f.linearize)
+ols_res2.apply(f.linearize)
+
+tools.comparation_plot(
+    exp2,
+    ols_res2,
+    title='OLS_Linear',
+    xlabel='Temperature',
+    ylabel='D',
+    interactive=True,
+)
+
+tools.comparation_plot(
+    exp,
+    ols_res,
+    title='OLS_Diffusion',
+    xlabel='Temperature [C]',
+    ylabel='D [m2/s]',
+    interactive=True,
+)
+
+exp.save_hdf5()
