@@ -5,9 +5,9 @@ from mylibs import tools, functions as f
 
 exp = tools.Experiment()
 exp.load_csv(*tools.input_path())
-tools.temporal_base_plot(exp)
+tools.temporal_plot(exp)
 
-exp = tools.temporal_config_plot(exp)
+exp = tools.configurate_data(exp)
 
 tools.temperature_plot(
     exp,

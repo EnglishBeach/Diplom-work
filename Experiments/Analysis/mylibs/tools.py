@@ -57,9 +57,9 @@ class Experiment:
             self.log.extend(file.get_storer('data').attrs.log)
         return ('hdf5 loaded', path)
 
-    def save_hdf5(self,path=None):
+    def save_hdf5(self, path=None):
         folder = path if path is not None else self.folder
-        assert  folder is not None, 'Path not define'
+        assert folder is not None, 'Path not define'
         file_path = f'{folder}\{self.name}.hdf5'
         with pd.HDFStore(file_path) as file:
             file.put('data', self.d)
@@ -118,17 +118,60 @@ def regress(experiment: Experiment):
 pd.set_option('mode.chained_assignment', None)
 plt.rc('xtick', labelsize=10)
 plt.rc('ytick', labelsize=10)
-plt.rc('font', size=10)  #controls default text size
-plt.rc('axes', titlesize=16)  #fontsize of the title
-plt.rc('axes', labelsize=15)  #fontsize of the x and y labels
+plt.rc('font', size=10)
+plt.rc('axes', titlesize=16)
+plt.rc('axes', labelsize=15)
 plt.rc('legend', fontsize=10)
 plt.rcParams["figure.figsize"] = (10, 7)
 
+VERBOSE_COLORS = {
+    'OK': 'g',
+    'OK_inner': 'b',
+    'image_sweep_check': 'r',
+    'combine_check': 'w',
+}
 
 
+def temporal_plot(
+    experiment,
+    title='',
+    ylabel='',
+    interactive=False,
+    save=False,
+):
+    fig, ax_v = plt.subplots()
+    ax_T = ax_v.twinx()
+    ax_v.scatter(experiment.d['time'], experiment.d['y'], color='red', marker='.')
+    ax_T.scatter(experiment.d['time'], experiment.d['x'], color='blue', marker='.')
+
+    fig.canvas.manager.set_window_title(title + ' plot')
+    fig.subplots_adjust(
+        top=0.9,
+        bottom=0.1,
+        left=0.1,
+        right=0.9,
+        hspace=0.2,
+        wspace=0.2,
+    )
+    ax_v.set_xlabel('Time [s]')
+    ax_T.set_ylabel('Temperature [C]', color='blue')
+    ax_v.set_ylabel(ylabel, color='red')
+
+    if interactive: plt.show()
+    if save:
+        os.makedirs(f'{experiment.folder}\Plots', exist_ok=True)
+        fig.savefig(f'{experiment.folder}\Plots\\{title}_{experiment.name}.jpg', dpi=600)
+    return experiment
 
 
-def ask_continue():
+def _initial_filter(df, x=(-np.inf, np.inf), y=(0, np.inf), time=(0, np.inf)):
+    temperature_cond = ((x[0] < df['x']) & (df['x'] < x[1]))
+    viscosity_cond = ((y[0] < df['y']) & (df['y'] < y[1]))
+    time_cond = ((time[0] < df['time']) & (df['time'] < time[1]))
+    return df[temperature_cond & viscosity_cond & time_cond]
+
+
+def _ask_continue():
     res = None
     while res is None:
         ask = input('Continue [y] and n: ')
@@ -141,49 +184,7 @@ def ask_continue():
     return res
 
 
-VERBOSE_COLORS = {
-    'OK': 'g',
-    'OK_inner': 'b',
-    'image_sweep_check': 'r',
-    'combine_check': 'w',
-}
-
-
-def _initial_filter(df, x=(-np.inf, np.inf), y=(0, np.inf), time=(0, np.inf)):
-    temperature_cond = ((x[0] < df['x']) & (df['x'] < x[1]))
-    viscosity_cond = ((y[0] < df['y']) & (df['y'] < y[1]))
-    time_cond = ((time[0] < df['time']) & (df['time'] < time[1]))
-    return df[temperature_cond & viscosity_cond & time_cond]
-
-
-def temporal_base_plot(experiment):
-    experiment.set_info(
-        compound=input('Compound: '),
-        rho=float(input('Rho: ')),
-        w=float(input('W mass: ')),
-    )
-
-    fig, ax_v = plt.subplots()
-    ax_T = ax_v.twinx()
-    ax_v.scatter(experiment.d['time'], experiment.d['y'], color='red', marker='.')
-    ax_T.scatter(experiment.d['time'], experiment.d['x'], color='blue', marker='.')
-
-    fig.canvas.manager.set_window_title('Start plot')
-    fig.subplots_adjust(
-        top=0.9,
-        bottom=0.1,
-        left=0.1,
-        right=0.9,
-        hspace=0.2,
-        wspace=0.2,
-    )
-    ax_v.set_xlabel('Time [s]')
-    ax_T.set_ylabel('Temperature [C]', color='blue')
-    ax_v.set_ylabel('Viscosity [cP]', color='red')
-    plt.show()
-    return experiment
-
-def temporal_config_plot(experiment: Experiment, save=False) -> Experiment:
+def configurate_data(experiment: Experiment, save=False) -> Experiment:
     while True:
         exp = experiment.copy()
         time_lim = ()
@@ -200,34 +201,22 @@ def temporal_config_plot(experiment: Experiment, save=False) -> Experiment:
         exp.d = _initial_filter(exp.d, time=time_lim, y=y_lim, x=(12, 42))
         exp.log.append(('initial_filter', {'time': time_lim, 'y': y_lim, 'x': (12, 42)}))
 
-        fig, ax_v = plt.subplots()
-        ax_v.set_title(f"{exp.name}: ({exp.info['w']}% mass)")
-        ax_T = ax_v.twinx()
-
-        ax_v.scatter(exp.d['time'], exp.d['y'], color='red', marker='.')
-        ax_T.scatter(exp.d['time'], exp.d['x'], color='blue', marker='.')
-
-        fig.canvas.manager.set_window_title('Initial filter plot')
-        fig.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9, hspace=0.2, wspace=0.2)
-        ax_v.set_ylabel('Viscosity [cP]', color='red')
-        ax_v.set_xlabel('Time [s]')
-        ax_T.set_ylabel('Temperature [C]', color='blue')
-        plt.show()
-
-        if ask_continue(): break
-
-    os.makedirs(f'{exp.folder}\Plots', exist_ok=True)
-    if save:
-        os.makedirs(f'{exp.folder}\Plots', exist_ok=True)
-        fig.savefig(f'{exp.folder}\Plots\\Temporal_{exp.name}.jpg', dpi=600)
+        temporal_plot(
+            exp,
+            title='Configurate',
+            ylabel='Viscosity [cP]',
+            save=save,
+            interactive=True,
+        )
+        if _ask_continue(): break
     return exp
 
 
 def temperature_plot(
     experiment: Experiment,
-    title,
-    xlabel,
-    ylabel,
+    title='',
+    xlabel='',
+    ylabel='',
     interactive=False,
     save=False,
 ):
