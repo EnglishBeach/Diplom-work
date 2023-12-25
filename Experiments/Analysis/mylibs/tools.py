@@ -155,6 +155,7 @@ def temporal_plot(
         hspace=0.2,
         wspace=0.2,
     )
+    ax_T.set_title(f"{experiment.name}: ({experiment.info['w']}% mass)")
     ax_v.set_xlabel('Time [s]')
     ax_T.set_ylabel('Temperature [C]', color='blue')
     ax_v.set_ylabel(ylabel, color='red')
