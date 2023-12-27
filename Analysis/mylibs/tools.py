@@ -2,12 +2,14 @@ import os
 import copy
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
-from . import functions, plots
+from . import functions
+
 pd.set_option('mode.chained_assignment', None)
+
 
 def input_path(path=''):
     while (path == '') or (not os.path.isfile(path)):
@@ -137,8 +139,38 @@ def _ask_continue():
             print('Incorrect input!')
     return res
 
+def _temporal_plot(
+    experiment: Experiment,
+    title='',
+    ylabel='',
+    interactive=False,
+    save_folder=None,
+):
+    fig, ax_v = plt.subplots()
+    ax_T = ax_v.twinx()
+    ax_v.scatter(experiment.d['time'], experiment.d['y'], color='red', marker='.')
+    ax_T.scatter(experiment.d['time'], experiment.d['x'], color='blue', marker='.')
 
-def configurate_data(experiment: Experiment, save=False) -> Experiment:
+    fig.canvas.manager.set_window_title(title + ' plot')
+    fig.subplots_adjust(
+        top=0.9,
+        bottom=0.1,
+        left=0.1,
+        right=0.9,
+        hspace=0.2,
+        wspace=0.2,
+    )
+    ax_T.set_title(f"{experiment.name}: ({experiment.info['w']}% mass)")
+    ax_v.set_xlabel('Time [s]')
+    ax_T.set_ylabel('Temperature [C]', color='blue')
+    ax_v.set_ylabel(ylabel, color='red')
+
+    if interactive: plt.show()
+    if save_folder is not None:
+        os.makedirs(f'{save_folder}\Plots', exist_ok=True)
+        fig.savefig(f'{save_folder}\Plots\\{title}_{experiment.name}.jpg', dpi=600)
+
+def configurate_data(experiment: Experiment) -> Experiment:
     while True:
         exp = experiment.copy()
         time_lim = ()
@@ -155,11 +187,10 @@ def configurate_data(experiment: Experiment, save=False) -> Experiment:
         exp.d = _initial_filter(exp.d, time=time_lim, y=y_lim, x=(12, 42))
         exp.log.append(('initial_filter', {'time': time_lim, 'y': y_lim, 'x': (12, 42)}))
 
-        plots.temporal_plot(
+        _temporal_plot(
             exp,
             title='Configurate',
             ylabel='Viscosity [cP]',
-            save=save,
             interactive=True,
         )
         if _ask_continue(): break
