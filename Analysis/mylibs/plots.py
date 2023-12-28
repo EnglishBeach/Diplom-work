@@ -2,7 +2,7 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from .tools import Experiment
+from .tools import Experiment,_temporal_plot as temporal_plot
 
 # Plots and load
 plt.rc('xtick', labelsize=10)
@@ -20,37 +20,6 @@ VERBOSE_COLORS = {
     'combine_check': 'w',
 }
 
-
-def temporal_plot(
-    experiment,
-    title='',
-    ylabel='',
-    interactive=False,
-    save_folder=None,
-):
-    fig, ax_v = plt.subplots()
-    ax_T = ax_v.twinx()
-    ax_v.scatter(experiment.d['time'], experiment.d['y'], color='red', marker='.')
-    ax_T.scatter(experiment.d['time'], experiment.d['x'], color='blue', marker='.')
-
-    fig.canvas.manager.set_window_title(title + ' plot')
-    fig.subplots_adjust(
-        top=0.9,
-        bottom=0.1,
-        left=0.1,
-        right=0.9,
-        hspace=0.2,
-        wspace=0.2,
-    )
-    ax_T.set_title(f"{experiment.name}: ({experiment.info['w']}% mass)")
-    ax_v.set_xlabel('Time [s]')
-    ax_T.set_ylabel('Temperature [C]', color='blue')
-    ax_v.set_ylabel(ylabel, color='red')
-
-    if interactive: plt.show()
-    if save_folder is not None:
-        os.makedirs(f'{save_folder}\Plots', exist_ok=True)
-        fig.savefig(f'{save_folder}\Plots\\{title}_{experiment.name}.jpg', dpi=600)
 
 
 def temperature_plot(

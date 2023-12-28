@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from mylibs import tools, functions as f
+from mylibs import tools,plots, functions as funcs
 
 
 exp = tools.Experiment()
@@ -9,7 +9,7 @@ tools.temporal_plot(exp)
 
 exp = tools.configurate_data(exp)
 
-tools.temperature_plot(
+plots.temperature_plot(
     exp,
     title='Viscosity',
     xlabel='Temperature [C]',
@@ -18,15 +18,15 @@ tools.temperature_plot(
 )
 
 
-exp.apply(f.C_to_K)
-exp.apply(f.nu_D)
-exp.apply(f.linearize)
-exp.group_filter(f.iqr_filter)
-exp.apply(f.delinearize)
-exp.apply(f.K_to_C)
+exp.apply(funcs.C_to_K)
+exp.apply(funcs.nu_D)
+exp.apply(funcs.linearize)
+exp.group_filter(funcs.iqr_filter)
+exp.apply(funcs.delinearize)
+exp.apply(funcs.K_to_C)
 print('Filtered')
 
-tools.temperature_plot(
+plots.temperature_plot(
     exp,
     title='Diffusion',
     xlabel='Temperature [C]',
@@ -44,7 +44,7 @@ ols_res = tools.Experiment(
     'interpolated',
 )
 
-ols_res.apply(f.K_to_C)
+ols_res.apply(funcs.K_to_C)
 
 exp.info
 
@@ -52,12 +52,12 @@ tmp=exp.copy()
 
 exp2= exp.copy()
 ols_res2 = ols_res.copy()
-exp2.apply(f.C_to_K)
-ols_res2.apply(f.C_to_K)
-exp2.apply(f.linearize)
-ols_res2.apply(f.linearize)
+exp2.apply(funcs.C_to_K)
+ols_res2.apply(funcs.C_to_K)
+exp2.apply(funcs.linearize)
+ols_res2.apply(funcs.linearize)
 
-tools.comparation_plot(
+plots.comparation_plot(
     exp2,
     ols_res2,
     title='OLS_Linear',
@@ -66,7 +66,7 @@ tools.comparation_plot(
     interactive=True,
 )
 
-tools.comparation_plot(
+plots.comparation_plot(
     exp,
     ols_res,
     title='OLS_Diffusion',
