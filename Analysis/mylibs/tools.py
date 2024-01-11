@@ -35,33 +35,20 @@ class Experiment:
         self.log = []
         self.info = {}
 
+    def copy(self):
+        return copy.deepcopy(self)
+
     def set_info(self, **info):
         self.info.update(info)
 
     def _log_wrapp(func):
 
         def log_wrapper(self, *args, **kwargs):
-            res = func(self, *args, **kwargs)
-            self.log.append(res)
-            return self.d
+            log, result = func(self, *args, **kwargs)
+            self.log.append(log)
+            return result
 
         return log_wrapper
-
-    @_log_wrapp
-    def load_csv(self, path):
-        self.folder, self.name = _split_path(path)
-        self.d = pd.read_csv(path)
-        self.d.rename(columns={'Temperature': 'x', 'Viscosity': 'y'}, inplace=True)
-        return ('csv loaded', path)
-
-    @_log_wrapp
-    def load_hdf5(self, path):
-        self.folder, self.name = _split_path(path)
-        with pd.HDFStore(path) as file:
-            self.d = file['data']
-            self.info.update(file.get_storer('data').attrs.info)
-            self.log.extend(file.get_storer('data').attrs.log)
-        return ('hdf5 loaded', path)
 
     def save_hdf5(self, folder=None):
         path = folder if folder is not None else self.folder
@@ -72,24 +59,52 @@ class Experiment:
             file.get_storer('data').attrs.log = self.log
             file.get_storer('data').attrs.info = self.info
 
-    def copy(self):
-        return copy.deepcopy(self)
-
     @_log_wrapp
     def apply(self, func):
-        self.d['time'], self.d['x'], self.d['y'] = func(self.d['time'], self.d['x'], self.d['y'])
-        return (func.__name__, [])
+        temp = copy.deepcopy(self)
+        (
+            temp.d['time'],
+            temp.d['x'],
+            temp.d['y'],
+            temp.unit,
+        ) = func(
+            self.d['time'],
+            self.d['x'],
+            self.d['y'],
+        )
+        return (func.__name__, []), temp
 
     @_log_wrapp
     def group_filter(self, filter, by='x', column='y'):
+        temp = copy.deepcopy(self)
         group = self.d.groupby(by=by)[column]
         mask = group.apply(filter).droplevel([0]).sort_index().to_numpy()
-        self.d = self.d[mask]
-        return (filter.__name__, [])
+        temp.d = self.d[mask]
+        return (filter.__name__, []), temp
+
+    def __repr__(self) -> pd.DataFrame:
+        return self.d
+
+
+def load_csv(path) -> Experiment:
+    exp = Experiment()
+    exp.folder, exp.name = _split_path(path)
+    exp.d = pd.read_csv(path)
+    exp.d.rename(columns={'Temperature': 'x', 'Viscosity': 'y'}, inplace=True)
+    return exp
+
+
+def load_hdf5(path) -> Experiment:
+    exp = Experiment()
+    exp.folder, exp.name = _split_path(path)
+    with pd.HDFStore(path) as file:
+        exp.d = file['data']
+        exp.info.update(file.get_storer('data').attrs.info)
+        exp.log.extend(file.get_storer('data').attrs.log)
+    return exp
 
 
 def regress(experiment: Experiment):
-
     exp = experiment.copy()
     exp.apply(functions.C_to_K)
     exp.apply(functions.linearize)
@@ -139,6 +154,7 @@ def _ask_continue():
             print('Incorrect input!')
     return res
 
+
 def _temporal_plot(
     experiment: Experiment,
     title='',
@@ -169,6 +185,7 @@ def _temporal_plot(
     if save_folder is not None:
         os.makedirs(f'{save_folder}\Plots', exist_ok=True)
         fig.savefig(f'{save_folder}\Plots\\{title}_{experiment.name}.jpg', dpi=600)
+
 
 def configurate_data(experiment: Experiment) -> Experiment:
     while True:
