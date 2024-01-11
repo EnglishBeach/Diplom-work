@@ -41,15 +41,6 @@ class Experiment:
     def set_info(self, **info):
         self.info.update(info)
 
-    def _log_wrapp(func):
-
-        def log_wrapper(self, *args, **kwargs):
-            log, result = func(self, *args, **kwargs)
-            self.log.append(log)
-            return result
-
-        return log_wrapper
-
     def save_hdf5(self, folder=None):
         path = folder if folder is not None else self.folder
         assert path is not None, 'Path not define'
@@ -59,31 +50,29 @@ class Experiment:
             file.get_storer('data').attrs.log = self.log
             file.get_storer('data').attrs.info = self.info
 
-    @_log_wrapp
     def apply(self, func):
-        temp = copy.deepcopy(self)
+        temp = self.copy()
         (
             temp.d['time'],
             temp.d['x'],
             temp.d['y'],
-            temp.unit,
+            comment,
         ) = func(
             self.d['time'],
             self.d['x'],
             self.d['y'],
         )
-        return (func.__name__, []), temp
+        temp.log.append({func.__name__: comment})
+        return temp
 
-    @_log_wrapp
     def group_filter(self, filter, by='x', column='y'):
         temp = copy.deepcopy(self)
         group = self.d.groupby(by=by)[column]
         mask = group.apply(filter).droplevel([0]).sort_index().to_numpy()
         temp.d = self.d[mask]
-        return (filter.__name__, []), temp
 
-    def __repr__(self) -> pd.DataFrame:
-        return self.d
+        temp.log.append({filter.__name__: None})
+        return temp
 
 
 def load_csv(path) -> Experiment:
@@ -105,11 +94,9 @@ def load_hdf5(path) -> Experiment:
 
 
 def regress(experiment: Experiment):
-    exp = experiment.copy()
-    exp.apply(functions.C_to_K)
-    exp.apply(functions.linearize)
+    experiment = (experiment.apply(functions.C_to_K).apply(functions.linearize))
 
-    df = exp.d
+    df = experiment.d
     df['x0'] = 1
     result = sm.OLS(df['y'], df[['x', 'x0']]).fit()
     means = result.params
@@ -133,6 +120,21 @@ def regress(experiment: Experiment):
     )
     func = lambda T: D0 * np.exp(-E / (8.314*T))
     return info, result, func
+
+
+def create_OLS(exp: Experiment):
+    info, result, func = regress(exp)
+    exp.set_info(**info)
+    x = np.linspace(13, 42, 100) + 273.15
+    ols_res = Experiment(
+        pd.DataFrame({
+            'x': x,
+            'y': func(x),
+            'time': x * 0,
+        }),
+        'interpolated',
+    )
+    return ols_res.apply(functions.K_to_C)
 
 
 def _initial_filter(df, x=(-np.inf, np.inf), y=(0, np.inf), time=(0, np.inf)):

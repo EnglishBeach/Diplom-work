@@ -28,7 +28,7 @@ def temperature_plot(
     xlabel='',
     ylabel='',
     interactive=False,
-    save_folder=False,
+    save_folder=None,
 ):
     fig, ax = plt.subplots()
     colors = experiment.d['Viscosity_verbose'].replace(VERBOSE_COLORS)

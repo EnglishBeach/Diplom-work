@@ -7,35 +7,35 @@ def nu_D(time, x, y):
     # k = 1.380649 * 1e-23
     k = 1
     y = k * x / (y*0.001)
-    return time, x, y
+    return time, x, y,dict(k = 1)
 
 
 def nu_to_v(time, x, y):
     ro = 1.73
     y = y / ro
-    return time, x, y
+    return time, x, y,dict()
 
 
 def K_to_C(time, x, y):
     x = x - 273.15
-    return time, x, y
+    return time, x, y,dict()
 
 
 def C_to_K(time, x, y):
     x = x + 273.15
-    return time, x, y
+    return time, x, y,dict()
 
 
 def linearize(time, x, y):
     x = 1 / x
     y = np.log(y)
-    return time, x, y
+    return time, x, y,dict()
 
 
 def delinearize(time, x, y):
     x = 1 / x
     y = np.exp(y)
-    return time, x, y
+    return time, x, y,dict()
 
 
 ## Group filters
