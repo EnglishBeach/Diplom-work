@@ -137,12 +137,13 @@ class PreProcessor:
 
             # Show rectangle
             if show_drawing:
-                point1 = (0 if point1[0] < 0 else
-                          (point1[0]
-                           if point1[0] < frame.shape[1] else frame.shape[1]),
-                          0 if point1[1] < 0 else
-                          (point1[1]
-                           if point1[1] < frame.shape[0] else frame.shape[0]))
+                point1 = (
+                    0 if point1[0] < 0 else (
+                        point1[0]
+                        if point1[0] < frame.shape[1] else frame.shape[1]),
+                    0 if point1[1] < 0 else (
+                        point1[1]
+                        if point1[1] < frame.shape[0] else frame.shape[0]))
 
                 cv2.rectangle(frame, point0, point1, blue_color, 2)
             cv2.imshow(window_name, frame)
