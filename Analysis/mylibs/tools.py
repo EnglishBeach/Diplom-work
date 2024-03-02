@@ -1,12 +1,15 @@
-import os
 import copy
-import pandas as pd
-import numpy as np
+import os
+from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 import statsmodels.api as sm
+from pydantic import BaseModel
 
 from . import functions
+from typing import Optional
 
 pd.set_option('mode.chained_assignment', None)
 
@@ -17,26 +20,48 @@ def input_path(path=''):
     return path
 
 
-def _split_path(path=''):
-    path_list = (path).split('\\')
-    folder = '\\'.join(path_list[:-1])
-    name = path_list[-1].split('.')[0]
-    return folder, name
+class Experiment(BaseModel):
 
+    class Config:
+        arbitrary_types_allowed = True
 
-class Experiment:
+    name: str = ''
     d: pd.DataFrame = None
-    folder = None
-    name = None
+    folder: Path
+    info: dict = {}
+    log: list = []
 
-    def __init__(self, data=None, name=''):
-        self.d = data
-        self.name = name
-        self.log = []
-        self.info = {}
+    @classmethod
+    def load_csv(cls, path):
+        path = Path(path)
+
+        df = pd.read_csv(path).rename(columns={'Temperature': 'x', 'Viscosity': 'y'})
+        return Experiment(
+            name=path.parent.stem,
+            d=df,
+            folder=path,
+        )
+
+    @classmethod
+    def load_hdf5(cls, path):
+        path = Path(path)
+        with pd.HDFStore(path) as file:
+            data = file['data']
+            info = file.get_storer('data').attrs.info
+            log = file.get_storer('data').attrs.log
+        return Experiment(
+            name=path.parent.stem,
+            d=data,
+            folder=path,
+            info=info,
+            log=log,
+        )
 
     def copy(self):
         return copy.deepcopy(self)
+
+    def __repr__(self) -> str:
+        return f'<Experiment {self.name} {self.info}>'
 
     def set_info(self, **info):
         self.info.update(info)
@@ -49,6 +74,31 @@ class Experiment:
             file.put('data', self.d)
             file.get_storer('data').attrs.log = self.log
             file.get_storer('data').attrs.info = self.info
+
+    @property
+    def df(self):
+        df = self.d
+        k = 1
+        df['Viscosity'] = k * (df['x'] + 273.15) / (df['y'] * 0.001)
+        df['compound'] = self.info['compound']
+        df['rho'] = self.info['rho']
+        df['w'] = self.info['w']
+        df['D0'] = self.info['D0']
+        df['E'] = self.info['E']
+        df = df.rename()[[
+            'compound',
+            'rho',
+            'w',
+            'time',
+            'Temperature',
+            'D',
+            'Viscosity',
+            'D0',
+            'E',
+            'Viscosity_verbose',
+            'Temperature_verbose',
+        ]]
+        return df
 
     def apply(self, func):
         temp = self.copy()
@@ -73,24 +123,6 @@ class Experiment:
 
         temp.log.append({filter.__name__: None})
         return temp
-
-
-def load_csv(path) -> Experiment:
-    exp = Experiment()
-    exp.folder, exp.name = _split_path(path)
-    exp.d = pd.read_csv(path)
-    exp.d.rename(columns={'Temperature': 'x', 'Viscosity': 'y'}, inplace=True)
-    return exp
-
-
-def load_hdf5(path) -> Experiment:
-    exp = Experiment()
-    exp.folder, exp.name = _split_path(path)
-    with pd.HDFStore(path) as file:
-        exp.d = file['data']
-        exp.info.update(file.get_storer('data').attrs.info)
-        exp.log.extend(file.get_storer('data').attrs.log)
-    return exp
 
 
 def regress(experiment: Experiment):
