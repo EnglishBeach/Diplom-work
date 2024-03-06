@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
-from mylibs import tools,plots, functions as funcs
+from mylibs import tools, plots, functions as funcs
 
 
 exp = tools.Experiment()
-exp.load_csv(*tools._split_path())
+exp.load_csv(*tools.input_path())
 tools.temporal_plot(exp)
 
 exp = tools.configurate_data(exp)
@@ -38,9 +38,7 @@ info, result, func = tools.regress(exp)
 exp.set_info(**info)
 x = np.linspace(13, 42, 100) + 273.15
 ols_res = tools.Experiment(
-    pd.DataFrame({
-        'x': x, 'y': func(x), 'time': x * 0
-    }),
+    pd.DataFrame({'x': x, 'y': func(x), 'time': x * 0}),
     'interpolated',
 )
 
@@ -48,9 +46,9 @@ ols_res.apply(funcs.K_to_C)
 
 exp.info
 
-tmp=exp.copy()
+tmp = exp.copy()
 
-exp2= exp.copy()
+exp2 = exp.copy()
 ols_res2 = ols_res.copy()
 exp2.apply(funcs.C_to_K)
 ols_res2.apply(funcs.C_to_K)

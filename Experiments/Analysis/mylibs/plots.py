@@ -1,8 +1,9 @@
 import os
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from .tools import Experiment,_temporal_plot as temporal_plot
+from .tools import Experiment
 
 # Plots and load
 plt.rc('xtick', labelsize=10)
@@ -19,7 +20,6 @@ VERBOSE_COLORS = {
     'image_sweep_check': 'r',
     'combine_check': 'w',
 }
-
 
 
 def temperature_plot(
@@ -65,7 +65,8 @@ def temperature_plot(
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
 
-    if interactive: plt.show()
+    if interactive:
+        plt.show()
     if save_folder is not None:
         os.makedirs(f'{save_folder}\Plots', exist_ok=True)
         fig.savefig(f'{save_folder}\Plots\\{title}_{experiment.name}.jpg', dpi=600)
@@ -115,7 +116,8 @@ def comparation_plot(
     ax.set_ylabel(ylabel)
     ax.legend()
 
-    if interactive: plt.show()
+    if interactive:
+        plt.show()
     if save_folder is not None:
         os.makedirs(f'{save_folder}\Plots', exist_ok=True)
         fig.savefig(f'{save_folder}\Plots\\{title}_{experiment.name}.jpg', dpi=600)
