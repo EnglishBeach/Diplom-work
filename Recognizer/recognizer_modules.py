@@ -2,7 +2,6 @@ import os
 import re
 import copy
 import numpy as np
-import pandas as pd
 import cv2
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
@@ -138,12 +137,17 @@ class PreProcessor:
             # Show rectangle
             if show_drawing:
                 point1 = (
-                    0 if point1[0] < 0 else (
-                        point1[0]
-                        if point1[0] < frame.shape[1] else frame.shape[1]),
-                    0 if point1[1] < 0 else (
-                        point1[1]
-                        if point1[1] < frame.shape[0] else frame.shape[0]))
+                    (
+                        0
+                        if point1[0] < 0
+                        else (point1[0] if point1[0] < frame.shape[1] else frame.shape[1])
+                    ),
+                    (
+                        0
+                        if point1[1] < 0
+                        else (point1[1] if point1[1] < frame.shape[0] else frame.shape[0])
+                    ),
+                )
 
                 cv2.rectangle(frame, point0, point1, blue_color, 2)
             cv2.imshow(window_name, frame)
@@ -180,10 +184,11 @@ class PreProcessor:
         video_capture.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
         _, image = video_capture.read()
         for variable in self.variable_windows:
-            point0,point1 = self._build_selection_window(
-                video_capture,window_name=f"Select {variable}",
+            point0, point1 = self._build_selection_window(
+                video_capture,
+                window_name=f"Select {variable}",
                 start_frame=start_frame,
-                )
+            )
             if (point0, point1) == ((0, 0), (0, 0)):
                 point1 = image.shape[:2:][::-1]
             self.variable_windows[variable] = (point0, point1)
@@ -221,7 +226,8 @@ class PreProcessor:
             hspace=0.0,
             wspace=0.1,
         )
-        if not isinstance(axises, np.ndarray): axises = [axises]
+        if not isinstance(axises, np.ndarray):
+            axises = [axises]
 
         time_slider_ax = axises[0]
         axises = axises[1:]
@@ -238,7 +244,8 @@ class PreProcessor:
                 axises[i].imshow(
                     stricted_images_list[variable],
                     cmap='binary',
-                ), )
+                ),
+            )
             i += 1
         fps = int(video_capture.get(cv2.CAP_PROP_FPS))
         max_len = int(video_capture.get(cv2.CAP_PROP_FRAME_COUNT) / fps) - 1
@@ -272,15 +279,9 @@ class PreProcessor:
     def __init__(self, variables):
         all_fields = dict(self.__class__.__dict__)
         self.parametr_configurations = {
-            key: value
-            for key, value in all_fields.items()
-            if key[0].isupper()
+            key: value for key, value in all_fields.items() if key[0].isupper()
         }
-        self.parametrs = {
-            key: min(value)
-            for key,
-            value in self.parametr_configurations.items()
-        }
+        self.parametrs = {key: min(value) for key, value in self.parametr_configurations.items()}
         self.variable_windows = {variable: 0 for variable in variables}
 
     def __getitem__(self, item):
@@ -302,12 +303,14 @@ class PostProcessor:
     def check(self, input_value, pattern, image, inside_info={}):
         self.pattern = pattern
         pattern_check = self.isOK(input_value)
-        if pattern_check is not None: return 'OK', pattern_check
+        if pattern_check is not None:
+            return 'OK', pattern_check
         self.image = image
         self.inside_parametrs = inside_info
         for check_name, check_func in self.active_checks_order.items():
             check_result = check_func(self)
-            if check_result is not None: return check_name, check_result
+            if check_result is not None:
+                return check_name, check_result
         return 'error', None
 
     def convert(self, value: str):
@@ -315,12 +318,15 @@ class PostProcessor:
 
     @staticmethod
     def check_type(func=None, get=False, checks={}):
-        if func is not None: checks.update({func.__name__: func})
-        if get: return checks
+        if func is not None:
+            checks.update({func.__name__: func})
+        if get:
+            return checks
         return func
 
     def isOK(self, raw_value: list):
-        if raw_value == []: return None
+        if raw_value == []:
+            return None
         value = raw_value[0]
         if re.match(self.pattern, value):
             return self.convert(value)
@@ -328,9 +334,7 @@ class PostProcessor:
     @check_type
     def OK_inner(self):
         processed_image = self.inner_processor(self.image)
-        raw_value = [
-            value for _, value, _ in self.reader.readtext(processed_image)
-        ]
+        raw_value = [value for _, value, _ in self.reader.readtext(processed_image)]
         return self.isOK(raw_value)
 
     def __init__(self, processor: PreProcessor, reader: cv2.VideoCapture):
