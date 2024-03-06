@@ -8,3 +8,8 @@ __pycache__
 **.mp4
 
 **copied
+
+COMSOL/Batch/system_batch.log
+COMSOL/Batch/System_batch.mph.recovery
+COMSOL/Batch/System_batch.mph.status
+COMSOL/Batch/Solves/**
