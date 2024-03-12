@@ -1,11 +1,10 @@
 import numpy as _np
 import pandas as _pd
+import pandas as pd
+import plotly.express as px
 
 from scipy.interpolate import griddata as _griddata
 from scipy.interpolate import RBFInterpolator as _RBFInterpolator
-
-
-
 
 
 def flat2image(
@@ -42,10 +41,6 @@ def flat2image(
     return X, Y, Z
 
 
-
-
-
-
 def collect_dfs(datas, dfs, diap):
     result = _pd.DataFrame()
     for i in range(len(datas)):
@@ -54,3 +49,13 @@ def collect_dfs(datas, dfs, diap):
         df[diap] = list(params)
         result = _pd.concat([result, df])
     return result
+
+
+def simple_temporal_plot(df: pd.DataFrame):
+    fig = px.line(df, x='time', y=[col for col in df.columns if col not in ['time', 'light']])
+    fig.update_layout(
+        height=500,
+        margin={'r': 0, 'l': 0, 't': 0, 'b': 0},
+        legend=dict(x=-0.1, y=1, xanchor="center"),
+    )
+    return fig
