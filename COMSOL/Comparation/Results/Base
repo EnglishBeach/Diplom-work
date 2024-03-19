@@ -1,0 +1,60 @@
+Reactions and rate constants
+
+ 1. Q = Qt
+ 2. Qt = Q
+ 3. Qt + DH = Q_DH
+ 4. Qt + QHH = QH + QH
+ 5. Qt = prod
+ 6. Qt + QHD = QH + QD
+ 7. Qt + D = QD
+ 8. Q_DH = Qt + DH
+ 9. Q_DH = QH + D
+10. QH + D = QHD
+11. QHD = QHH
+12. QH + QH = Q + QHH
+13. QD = Q + D
+14. D + D = prod
+
+Equations of the model
+
+d[Q]/dt = -R1 + R2 + R12 + R13
+d[Qt]/dt = R1 - R2 - R3 - R4 - R5 - R6 - R7 + R8
+d[DH]/dt = -R3 + R8
+d[Q_DH]/dt = R3 - R8 - R9
+d[QHH]/dt = -R4 + R11 + R12
+d[QH]/dt = 2*R4 + R6 + R9 - R10 - 2*R12
+d[prod]/dt = R5 + R14
+d[QHD]/dt = -R6 + R10 - R11
+d[QD]/dt = R6 + R7 - R13
+d[D]/dt = -R7 + R9 - R10 + R13 - 2*R14
+
+where
+
+R1 = k1*[Q]
+R2 = k2*[Qt]
+R3 = k3*[Qt]*[DH]
+R4 = k4*[Qt]*[QHH]
+R5 = k5*[Qt]
+R6 = k6*[Qt]*[QHD]
+R7 = k7*[Qt]*[D]
+R8 = k8*[Q_DH]
+R9 = k9*[Q_DH]
+R10 = k10*[QH]*[D]
+R11 = k11*[QHD]
+R12 = k12*[QH]*[QH]
+R13 = k13*[QD]
+R14 = k14*[D]*[D]
+
+Initial concentrations
+
+[Q] = 1
+[Qt] = 0
+[DH] = 1
+[Q_DH] = 0
+[QHH] = 0
+[QH] = 0
+[prod] = 0
+[QHD] = 0
+[QD] = 0
+[D] = 0
+
