@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.ticker import FuncFormatter
-from matplotlib.widgets import Slider
+from matplotlib.widgets import Slider, Button
 from scipy.integrate import solve_ivp
 
 plt.rc('xtick', labelsize=10)
@@ -68,18 +68,18 @@ class Differ:
 
     def __getitem__(self, comp):
         sigma = 1e-9
-        return (self.y1[comp] - self.y2[comp]) / (self.y1[comp] + sigma) * 100
+        return (self.y1[comp] - self.y2[comp]) / (self.y1[comp].mean() + sigma) * 100
 
     def solve(self, initial=None, K=None):
         self.y1.solve(initial=initial, K=K)
         self.y2.solve(initial=initial, K=K)
 
 
-def show_plot(y: Solver | Differ, set_lim=False):
+def show_plot(y: Solver | Differ, set_lim=False, auto=False):
     lims = 50
     fig, ax = plt.subplots()
     gs = plt.GridSpec(2, 2, figure=fig)
-    fig.subplots_adjust(left=0.25, right=0.99, bottom=0.1, top=0.95, hspace=0.1, wspace=0.1)
+    fig.subplots_adjust(left=0.25, right=0.99, bottom=0.2, top=0.95, hspace=0.1, wspace=0.1)
     ax.xaxis.set_ticklabels([])
     ax.yaxis.set_ticklabels([])
     ax.spines['top'].set_visible(False)
@@ -118,6 +118,32 @@ def show_plot(y: Solver | Differ, set_lim=False):
         other_ax.set_ylim([-lims, lims])
 
     sliders = {}
+    K_new = copy.deepcopy(K)
+
+    def get_update(k):
+        def update(val):
+            K_new[k] = K[k] * 10 ** sliders[k].val
+            if auto:
+                y.solve(K=K_new)
+            for c, plot in plots.items():
+                plot.set_ydata(y[c])
+            fig.canvas.draw_idle()
+
+        return update
+
+    def solve_update(event):
+        print("asf")
+        # for k in K:
+        #     K_new[k] = K[k] * 10 ** sliders[k].val
+        # y.solve(K=K_new)
+        # for c, plot in plots.items():
+        #     plot.set_ydata(y[c])
+        # fig.canvas.draw_idle()
+
+    but_axes = fig.add_axes([0.05, 0.05, 0.15, 0.03])
+    button = Button(but_axes, 'Solve', hovercolor='0.975')
+    button.on_clicked(solve_update)
+
     for i, k in enumerate(K):
         k_axes = fig.add_axes([0.05, 0.95 - 0.05 * i, 0.15, 0.05])
         amp_slider = Slider(
@@ -129,19 +155,7 @@ def show_plot(y: Solver | Differ, set_lim=False):
             valstep=0.1,
             orientation="horizontal",
         )
+        amp_slider.on_changed(get_update(k))
         sliders[k] = amp_slider
-
-    def update(val):
-        k = copy.deepcopy(K)
-        for h in K:
-            k[h] = K[h] * 10 ** sliders[h].val
-
-        y.solve(K=k)
-        for c, plot in plots.items():
-            plot.set_ydata(y[c])
-        fig.canvas.draw_idle()
-
-    for h in K:
-        sliders[h].on_changed(update)
 
     return fig
