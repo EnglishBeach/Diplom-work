@@ -1,0 +1,125 @@
+\documentclass{article}
+\usepackage{chemfig}
+\usepackage[a4paper, total={8in, 11in}]{geometry}
+
+\def\IRP{$\left[Q^{\bullet -},DH^{\bullet +}\right]{}_s$}
+\def\RP{$\left[QH^{\bullet },D^{\bullet }\right]$}
+\def\R{$QH^{\bullet }+D^{\bullet }$}
+
+\def\QH{$QH^{\bullet }$}
+\def\D{$D^{\bullet }$}
+\def\Q{$Q$}
+\def\Qt{$Q^{*}$}
+\def\DH{$DH$}
+\def\QHH{$QHH$}
+\def\QHD{$QHD$}
+\def\QD{$QD^{\bullet }$}
+
+\begin{document}
+
+\textbf{Activation:}
+
+\schemestart
+\Q
+    \arrow{<=>[$h\nu$, $k_l$][$k_{-l}$]}
+\Qt
+\schemestop
+\\
+
+$k_l$ = 1e8 - 1e10
+
+$k_{-l}$ = 1e5  - 1e6
+\\
+
+\textbf{Quenching - \Qt:}
+
+\schemestart
+\Qt + \DH
+    \arrow{<=>[$k_{qE}$][$k_{-qE}$]}
+\IRP
+    \arrow{->[$k_H$]}
+\QH + \D
+\schemestop
+\\
+
+$k_{qE}$ = 1e8 - 1e10
+
+$k_{-qE}$ = 1e7 - 1e9
+
+$k_H$ = 1e8 - 1e10
+\\
+
+\schemestart
+\Qt + \QHH
+    \arrow{->[$k_{qH}$]}
+2\QH
+    \arrow{<=>[$k_{redQ}$][$k_{oxQ}$]}
+\Q + \QHH
+\schemestop
+\\
+
+$k_{qH}$ = 1e5 - 1e9
+
+$k_{oxQ}$ =1
+
+$k_{redQ}$ = 1e9
+\\
+
+\schemestart
+\Qt + \QHD
+    \arrow{->[$k_{qQD}$]}
+\QH + \QD
+\schemestop
+\\
+
+$k_{qQD}$ = ? (2)
+\\
+
+\schemestart
+\Qt
+    \arrow{->[$k_{qPh}$]}
+prod
+\schemestop
+\\
+
+$k_{qPh}$ = 1e9 (1e-5)
+\\
+
+\textbf{Quenching - \Q:}
+
+\schemestart
+\Q + \D
+    \arrow{<=>[$k_{D}$][$k_{-D}$]}
+\QD
+\schemestop
+\\
+
+
+
+
+\textbf{Other:}
+
+\schemestart
+\QH + \D
+    \arrow{->[$k_{r}$]}
+\QHD
+    \arrow{->[$k_{p}$]}
+\QHH + N-prod
+\schemestop
+\\
+
+$k_{r}$ = ?(1e9)
+
+$k_{p}$ = 1e-5 - 1e-3
+\\
+
+\schemestart
+2\D
+    \arrow{->[$k_{rD}$]}
+N-prod
+\schemestop
+\\
+
+$k_{rD}$ = ? (1e9)
+
+\end{document}
