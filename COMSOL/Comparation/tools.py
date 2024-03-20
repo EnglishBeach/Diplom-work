@@ -21,7 +21,7 @@ class BaseK(dict):
         consts = {
             key: value
             for key, value in self.__class__.__dict__.items()
-            if key.startswith('K') or key in ['light']
+            if (key not in ['__module__'] + dir(dict)) and '__' not in key
         }
         super().__init__(**consts)
 
@@ -72,6 +72,21 @@ class Differ:
 
     def solve(self, initial=None, K=None):
         self.y1.solve(initial=initial, K=K)
+        self.y2.solve(initial=initial, K=K)
+
+
+class Comparator:
+    def __init__(self, y1, y2) -> None:
+        self.y1: Solver = y1
+        self.y2: Solver = y2
+        self.K = y1.K
+        self.T = y1.T
+
+    def __getitem__(self, comp):
+        sigma = 1e-9
+        return (self.y1[comp] - self.y2[comp]) / (self.y1[comp].mean() + sigma) * 100
+
+    def solve(self, initial=None, K=None):
         self.y2.solve(initial=initial, K=K)
 
 

@@ -1,8 +1,8 @@
-PWD d:/WORKS/Diplom-work/COMSOL/Sceme
+PWD d:/WORKS/Diplom-work/COMSOL/Scheme
 INPUT d:/Programs/TEX/texlive/2023/texmf.cnf
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/web2c/texmf.cnf
 INPUT d:/Programs/TEX/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt
-INPUT d:/WORKS/Diplom-work/COMSOL/Sceme/Full.tex
+INPUT d:/WORKS/Diplom-work/COMSOL/Scheme/Full.tex
 OUTPUT Full.log
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/base/article.cls
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/base/article.cls
