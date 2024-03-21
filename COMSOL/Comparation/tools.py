@@ -81,10 +81,11 @@ class Comparator:
         self.y2: Solver = y2
         self.K = y1.K
         self.T = y1.T
+        self.y1.solve()
 
     def __getitem__(self, comp):
         sigma = 1e-9
-        return (self.y1[comp] - self.y2[comp]) / (self.y1[comp].mean() + sigma) * 100
+        return self.y1[comp] - self.y2[comp]
 
     def solve(self, initial=None, K=None):
         self.y2.solve(initial=initial, K=K)
