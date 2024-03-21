@@ -17,6 +17,8 @@
 
 \begin{document}
 
+\textbf{-------------------- FULL SYSTEM --------------------}
+
 \textbf{Activation:}
 
 \schemestart
@@ -85,7 +87,7 @@ prod
 $k_{qPh}$ = 1e9 (1e-5)
 \\
 
-\textbf{Quenching - \Q:}
+\textbf{Other:}
 
 \schemestart
 \Q + \D
@@ -94,13 +96,11 @@ $k_{qPh}$ = 1e9 (1e-5)
 \schemestop
 \\
 
-$k_{D}$ =?(1)
+$k_{D}$ = ?(1)
 
 $k_{-D}$ = (0.05)
 \\
 
-
-\textbf{Other:}
 
 \schemestart
 \QH + \D
@@ -124,5 +124,73 @@ N-prod
 \\
 
 $k_{rD}$ = ? (1e9)
+
+\newpage
+
+\textbf{-------------------- SIMPLE SYSTEM --------------------}
+
+\textbf{Activation:}
+
+\schemestart
+\Q
+    \arrow{<=>[$h\nu$, $k_l$][$k_{-l}$]}
+\Qt
+\schemestop
+\\
+
+$k_l$ = 1e8 - 1e10
+
+$k_{-l}$ = 1e5  - 1e6
+\\
+
+\textbf{Quenching - \Qt:}
+
+\schemestart
+\Qt + \DH
+    \arrow{->[$k_H$]}
+\QH + \D
+\schemestop
+\\
+
+$k_H$ = 1e8 - 1e10
+\\
+
+\schemestart
+\Qt + \QHH
+    \arrow{->[$k_{qH}$]}
+2\QH
+    \arrow{->[$k_{redQ}$]}
+\Q + \QHH
+\schemestop
+\\
+
+$k_{qH}$ = 1e5 - 1e9
+
+$k_{redQ}$ = 1e9
+\\
+
+
+\textbf{Other:}
+
+\schemestart
+\QH + \D
+    \arrow{->[$k_{r}$]}
+\QHD
+\schemestop
+\\
+
+$k_{r}$ = ?(1e9)
+\\
+
+\schemestart
+2\D
+    \arrow{->[$k_{rD}$]}
+N-prod
+\schemestop
+\\
+
+$k_{rD}$ = ? (1e9)
+
+
 
 \end{document}

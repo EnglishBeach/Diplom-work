@@ -1,22 +1,67 @@
 Reactions and rate constants
 
+# Qt
  1. Q = Qt
  2. Qt = Q
+# qE2 - H
  3. Qt + DH = Q_DH
- 4. Qt + QHH = QH + QH
- 5. Qt = prod
- 6. Qt + QHD = QH + QD
- 7. Qt + D = QD
- 8. Q_DH = Qt + DH
- 9. Q_DH = QH + D
-10. QH + D = QHD
-11. QHD = QHH
-12. QH + QH = Q + QHH
-13. QD = Q + D
-14. D + D = prod
+ 4. Q_DH = Qt + DH
+ 5. Q_DH = QH + D
+# qH - redQ2
+ 6. Qt + QHH = QH + QH
+ 7. QH + QH = Q + QHH
+ 8. Q + QHH = QH + QH
+#  qQD
+ 9. Qt + QHD = QH + QD
+# qPh
+10. Qt = prod
+# D2
+11. Q + D = QD
+12. QD = Q + D
+#r -p
+13. QH + D = QHD
+14. QHD = QHH
+# rD
+15. D + D = prod
 
 Equations of the model
+Cl	Q
+C2	Qt
+C3	DH
+C4	Q_DH
+C5	QH
+C6	D
+C7	QHH
+C8	QHD
+C9	QD
+C10	prod
 
+R1	=	kl*Cl
+R2	=	k2*C2
+R3	=	k3*C2*C3
+R4	=	k4*C4
+R5	=	k5*C4
+R6	=	k6*C2*C7
+R7	=	k7*C5*C5
+R8	=	k8*Cl*C7
+R9	=	k9*C2*C8
+RIO	=	klO*C2
+Rll	=	kll*Cl*C6
+R12	=	kl2*C9
+R13	=	kl3*C5*C6
+R14	=	kl4*C8
+R15	=	kl5*C6*C6
+
+	dCl/dt	=	-R1 + R2 + R7 - R8 - Rll + R12
+	dC2/dt	=	R1 - R2 - R3 + R4 - R6 - R9 - RIO
+	dC3/dt	=	-R3 + R4
+	dC4/dt	=	R3 - R4 - R5
+	dC5/dt	=	R5 + 2*R6 - 2*R7 + 2*R8 + R9 - R13
+	dC6/dt	=	R5- Rll +R12- R13 - 2*R15
+	dC7/dt	=	-R6 + R7 - R8 + R14
+	dC8/dt	=	-R9 + R13 - R14
+	dC9/dt	=	R9 + R11 - R12
+	dClO/dt	=	RIO + R15
 d[Q]/dt = -R1 + R2 + R12 + R13
 d[Qt]/dt = R1 - R2 - R3 - R4 - R5 - R6 - R7 + R8
 d[DH]/dt = -R3 + R8
@@ -57,4 +102,3 @@ Initial concentrations
 [QHD] = 0
 [QD] = 0
 [D] = 0
-

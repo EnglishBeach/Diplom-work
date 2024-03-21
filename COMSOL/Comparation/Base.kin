@@ -13,7 +13,6 @@ QH + QH = Q + QHH
 Q + QHH = QH + QH
 #  qQD
 Qt + QHD = QH + QD
-# qD
 # qPh
 Qt = prod
 # D2
