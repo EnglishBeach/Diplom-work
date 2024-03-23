@@ -1,0 +1,46 @@
+<Reactions>
+# INITIATION
+
+# Activation
+# Qt
+Q = Qt
+Qt = Q
+
+# H - H-transfer
+Qt + DH = QH + D
+# qH -Quenching
+Qt + QHH = QH + QH
+# redQ2 - Disproportion
+QH + QH = Q + QHH
+# r - Quenching D
+QH + D = QHD
+# rD - Disproportion D
+D + D = prod
+
+# POLIMERIZATION
+# pI - initiation
+D + M = DM
+# pPR - Propagation
+DM + M = P
+# pPR - Chain-transfer
+P + M = P
+# pRD - pRP - pD- Recombination, dispropotion
+P + D = P_dead
+P + P = P_dead
+P + P = P_dead + P_dead
+
+
+<Initial concentrations>
+
+[Q] = 1
+[DH] = 1
+
+<Temperature>
+
+298.15, 0, 0
+
+<Time grid>
+
+0 (auto) 1
+
+<End of data>
