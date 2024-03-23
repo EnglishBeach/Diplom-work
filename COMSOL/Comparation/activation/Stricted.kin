@@ -1,15 +1,17 @@
 <Reactions>
 
-Q + DH = QH + D
-QH + D = QHD
+# Qt
+Q = Qt
+Qt = Q
+# H
+Qt + DH = QH + D
+# qH - redQ2
+Qt + QHH = QH + QH
 QH + QH = Q + QHH
-Q + QHH = QH + QH
-Q + QHD = QH + QD
-QD = Q + D
-Q + D = QD
-QHD = QHH + prod
+#r
+QH + D = QHD
+# rD
 D + D = prod
-Q = prod
 
 <Initial concentrations>
 
