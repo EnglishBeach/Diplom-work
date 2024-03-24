@@ -56,24 +56,47 @@ class Solver:
         )
         self.y = solution.sol(self.T)
 
+    def get_specific(self, value):
+        match value:
+            case 'P':
+                M = self.y[self.comp['M']]
+                DM = self.y[self.comp['DM']]
+                M0 = self.initial[self.comp['M']]
+                return M0 - M - DM
+
     def __getitem__(self, value):
+        if value in ['P']:
+            return self.get_specific(value)
         return self.y[self.comp[value]]
 
+    def get_df(self, comps: list):
+        res = {'time': self.T}
+        for comp in comps:
+            res[comp] = self[comp]
+        return pd.DataFrame(res)
 
-class Differ:
-    def __init__(self, y1, y2) -> None:
-        self.y1: Solver = y1
-        self.y2: Solver = y2
-        self.K = y1.K
-        self.T = y1.T
 
-    def __getitem__(self, comp):
-        sigma = 1e-9
-        return self.y1[comp] - self.y2[comp]
+import itertools
 
-    def solve(self, initial=None, K=None):
-        self.y1.solve(initial=initial, K=K)
-        self.y2.solve(initial=initial, K=K)
+
+def variant(v):
+    return [v * 0.1, v * 0.5, v, v * 2, v * 10]
+
+
+def get_combinations(k: dict):
+    combination_dict = {key: variant(value) for key, value in k.items()}
+    keys, values = zip(*combination_dict.items())
+    return (dict(zip(keys, v)) for v in itertools.product(*values))
+
+
+# def sweep(Y1:Solver,Y2:Solver):
+#     Y1.
+#     K_base = Y1.K
+
+#     for k in Y1.K:
+#         Y1.solve(
+#             K=
+#         )
 
 
 class Comparator:
@@ -91,87 +114,17 @@ class Comparator:
         self.y2.solve(initial=initial, K=K)
 
 
-def show_plot(y: Solver | Differ, set_lim=False, auto=False):
-    lims = 50
-    fig, ax = plt.subplots()
-    gs = plt.GridSpec(2, 2, figure=fig)
-    fig.subplots_adjust(left=0.25, right=0.99, bottom=0.2, top=0.95, hspace=0.1, wspace=0.1)
-    ax.xaxis.set_ticklabels([])
-    ax.yaxis.set_ticklabels([])
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    ax.spines['bottom'].set_visible(False)
-    ax.spines['left'].set_visible(False)
+class Differ:
+    def __init__(self, y1, y2) -> None:
+        self.y1: Solver = y1
+        self.y2: Solver = y2
+        self.K = y1.K
+        self.T = y1.T
 
-    scal = FuncFormatter(lambda x, pos: f'{x*1000: .2f}')
-    K = y.K
-    y.solve()
+    def __getitem__(self, comp):
+        sigma = 1e-9
+        return self.y1[comp] - self.y2[comp]
 
-    plots = {}
-
-    base_ax = plt.subplot(gs[0, 0:2])
-    for c in ['Q', 'DH', 'QHH']:
-        plots[c] = base_ax.plot(y.T, y[c], label=c)[0]
-    base_ax.legend()
-    base_ax.xaxis.set_major_formatter(scal)
-    if set_lim:
-        base_ax.set_ylim([-lims, lims])
-
-    d_ax = plt.subplot(gs[1, 0])
-    plots['D'] = d_ax.plot(y.T, y['D'], label='D')[0]
-    d_ax.legend()
-    d_ax.xaxis.set_major_formatter(scal)
-    if set_lim:
-        d_ax.set_ylim([-lims, lims])
-
-    other_ax = plt.subplot(gs[1, 1])
-    other_ax.xaxis.set_major_formatter(scal)
-    for c in ['QH', 'QHD']:
-        plots[c] = other_ax.plot(y.T, y[c], label=c)[0]
-    other_ax.legend()
-    other_ax.xaxis.set_major_formatter(scal)
-    if set_lim:
-        other_ax.set_ylim([-lims, lims])
-
-    sliders = {}
-    K_new = copy.deepcopy(K)
-
-    def get_update(k):
-        def update(val):
-            K_new[k] = K[k] * 10 ** sliders[k].val
-            if auto:
-                y.solve(K=K_new)
-            for c, plot in plots.items():
-                plot.set_ydata(y[c])
-            fig.canvas.draw_idle()
-
-        return update
-
-    def solve_update(event):
-        print("asf")
-        # for k in K:
-        #     K_new[k] = K[k] * 10 ** sliders[k].val
-        # y.solve(K=K_new)
-        # for c, plot in plots.items():
-        #     plot.set_ydata(y[c])
-        # fig.canvas.draw_idle()
-
-    but_axes = fig.add_axes([0.05, 0.05, 0.15, 0.03])
-    button = Button(but_axes, 'Solve', hovercolor='0.975')
-    button.on_clicked(solve_update)
-
-    for i, k in enumerate(K):
-        k_axes = fig.add_axes([0.05, 0.95 - 0.05 * i, 0.15, 0.05])
-        amp_slider = Slider(
-            ax=k_axes,
-            label=k,
-            valmin=-3,
-            valmax=3,
-            valinit=0,
-            valstep=0.1,
-            orientation="horizontal",
-        )
-        amp_slider.on_changed(get_update(k))
-        sliders[k] = amp_slider
-
-    return fig
+    def solve(self, initial=None, K=None):
+        self.y1.solve(initial=initial, K=K)
+        self.y2.solve(initial=initial, K=K)
