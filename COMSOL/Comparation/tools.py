@@ -1,11 +1,8 @@
-import copy
-
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-from matplotlib.ticker import FuncFormatter
-from matplotlib.widgets import Slider, Button
 from scipy.integrate import solve_ivp
+import numpy as np
+import copy
 
 plt.rc('xtick', labelsize=10)
 plt.rc('ytick', labelsize=10)
@@ -16,7 +13,7 @@ plt.rc('legend', fontsize=10)
 plt.rcParams["figure.figsize"] = (10, 7)
 
 
-class BaseK(dict):
+class K(dict):
     def __init__(self):
         consts = {
             key: value
@@ -29,29 +26,39 @@ class BaseK(dict):
         self.__setattr__(__key, __value)
         return super().__setitem__(__key, __value)
 
+    def copy(self) -> dict:
+        return copy.deepcopy(self)
+
+
+def get_init(comps_str: str, init: list):
+    comps = comps_str.replace('[', '').replace(']', '').split(', ')
+    return dict(zip(comps, init))
+
 
 class Solver:
-    def __init__(self, system, K, initial, comps, T) -> None:
-        self.system = system
+    def __init__(self, system, K: K, initial: dict, T: np.ndarray) -> None:
+        self._system = system
         self.K = K
-        self.initial = initial
         self.T = T
 
-        comps = comps.replace('[', '').replace(']', '')
-        self.comp = {}
-        for i, key in enumerate(comps.split(', ')):
-            self.comp[key] = i
+        self.initial = initial
+        self._comp = {key: i for i, key in enumerate(self.initial)}
+
         self.solve()
 
-    def solve(self, initial=None, K=None):
-        init = initial if initial is not None else self.initial
-        k = K if K is not None else self.K
+    def solve(self, initial: dict = {}, K: dict = {}):
+        init = self.initial.copy()
+        init.update(initial)
 
+        k = self.K.copy()
+        for key, value in K.items():
+            k[key] = value
         solution = solve_ivp(
-            fun=self.system,
+            fun=self._system,
             t_span=[0, self.T.max()],
-            y0=init,
+            y0=list(init.values()),
             args=(k,),
+            method='BDF',
             dense_output=True,
         )
         self.y = solution.sol(self.T)
@@ -59,44 +66,15 @@ class Solver:
     def get_specific(self, value):
         match value:
             case 'P':
-                M = self.y[self.comp['M']]
-                DM = self.y[self.comp['DM']]
-                M0 = self.initial[self.comp['M']]
+                M = self.y['M']
+                DM = self.y['DM']
+                M0 = self.initial['M']
                 return M0 - M - DM
 
     def __getitem__(self, value):
         if value in ['P']:
             return self.get_specific(value)
-        return self.y[self.comp[value]]
-
-    def get_df(self, comps: list):
-        res = {'time': self.T}
-        for comp in comps:
-            res[comp] = self[comp]
-        return pd.DataFrame(res)
-
-
-import itertools
-
-
-def variant(v):
-    return [v * 0.1, v * 0.5, v, v * 2, v * 10]
-
-
-def get_combinations(k: dict):
-    combination_dict = {key: variant(value) for key, value in k.items()}
-    keys, values = zip(*combination_dict.items())
-    return (dict(zip(keys, v)) for v in itertools.product(*values))
-
-
-# def sweep(Y1:Solver,Y2:Solver):
-#     Y1.
-#     K_base = Y1.K
-
-#     for k in Y1.K:
-#         Y1.solve(
-#             K=
-#         )
+        return self.y[self._comp[value]]
 
 
 class Comparator:
