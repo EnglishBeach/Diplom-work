@@ -46,6 +46,9 @@ class Solver:
 
         self.solve()
 
+    def is_correct(self):
+        return (0 <= self.y.min()) & (self.y.max() < 1e6)
+
     def solve(self, initial: dict = {}, K: dict = {}):
         init = self.initial.copy()
         init.update(initial)
@@ -53,15 +56,24 @@ class Solver:
         k = self.K.copy()
         for key, value in K.items():
             k[key] = value
-        solution = solve_ivp(
-            fun=self._system,
-            t_span=[0, self.T.max()],
-            y0=list(init.values()),
-            args=(k,),
-            method='BDF',
-            dense_output=True,
-        )
-        self.y = solution.sol(self.T)
+
+        for method in [
+            'BDF',
+            'Radau',
+            'LSODA',
+        ]:
+            solution = solve_ivp(
+                fun=self._system,
+                t_span=[0, self.T.max()],
+                y0=list(init.values()),
+                args=(k,),
+                method=method,
+                dense_output=True,
+                rtol=0.01,
+            )
+            self.y = solution.sol(self.T)
+            if self.is_correct():
+                break
 
     def get_specific(self, value):
         match value:
