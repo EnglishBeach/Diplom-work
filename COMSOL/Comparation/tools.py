@@ -69,7 +69,7 @@ class Solver:
                 args=(k,),
                 method=method,
                 dense_output=True,
-                rtol=0.01,
+                # rtol=0.01,s
             )
             self.y = solution.sol(self.T)
             if self.is_correct():

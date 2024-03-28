@@ -1,28 +1,28 @@
 <Reactions>
 
 # Qt
-Q = Qt
-Qt = Q
+Q = Qt,             k = 1e+04
+Qt = Q,             k = 1e+05
 # qE2 - H
-Qt + DH = Q_DH
-Q_DH = Qt + DH
-Q_DH = QH + D
+Qt + DH = Q_DH,     k = 6e+09
+Q_DH = Qt + DH,     k = 1e+08
+Q_DH = QH + D,      k = 1e+09
 # qH - redQ2
-Qt + QHH = QH + QH
-QH + QH = Q + QHH
-Q + QHH = QH + QH
+Qt + QHH = QH + QH, k = 1e+06
+QH + QH = Q + QHH,  k = 1e+09
+Q + QHH = QH + QH,  k = 1
 #  qQD
-Qt + QHD = QH + QD
+Qt + QHD = QH + QD, k = 2
 # qPh
-Qt = prod
+Qt = prod,          k = 1e-05
 # D2
-Q + D = QD
-QD = Q + D
+Q + D = QD,         k = 1
+QD = Q + D,         k = 0.05
 #r -p
-QH + D = QHD
-QHD = QHH
+QH + D = QHD,       k = 1e+09
+QHD = QHH,          k = 0.0001
 # rD
-D + D = prod
+D + D = prod,       k = 1e+09
 
 <Initial concentrations>
 
@@ -35,6 +35,6 @@ D + D = prod
 
 <Time grid>
 
-0 (auto) 1
+0 (auto) 0.001
 
 <End of data>
