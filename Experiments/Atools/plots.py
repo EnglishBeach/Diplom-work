@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from .tools import Experiment
+from .base import Experiment
 
 # Plots and load
 plt.rc('xtick', labelsize=10)

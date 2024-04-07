@@ -1,5 +1,6 @@
 import copy
 import os
+from enum import Enum
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -11,6 +12,13 @@ from pydantic import BaseModel
 from . import functions
 
 pd.set_option("mode.chained_assignment", None)
+
+
+class Mols(Enum):
+    butanol = 'BUT'
+    ocm = 'OCM'
+    dmag = 'DMA'
+    peta = 'PET'
 
 
 def input_path(path=""):
@@ -214,9 +222,7 @@ def configurate_data(experiment: Experiment) -> Experiment:
             y_lim = [float(i) for i in y_lim.split(" ")]
 
         exp.d = _initial_filter(exp.d, time=time_lim, y=y_lim, x=(12, 42))
-        exp.log.append(
-            ("initial_filter", {"time": time_lim, "y": y_lim, "x": (12, 42)})
-        )
+        exp.log.append(("initial_filter", {"time": time_lim, "y": y_lim, "x": (12, 42)}))
 
         _temporal_plot(
             exp,
