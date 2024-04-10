@@ -1,13 +1,23 @@
 import numpy as np
 import pandas as pd
-from mylibs import tools, plots, functions as funcs
+from base import Experiment
+import os
+from pathlib import Path
 
+# tools, plots, functions as funcs
 
-exp = tools.Experiment()
-exp.load_csv(*tools.input_path())
-tools.temporal_plot(exp)
+for path in os.listdir('Experiments\Viscosity'):
+    path =Path(path)
+    hdf5_name= [file_name for file_name in  os.listdir(path) if '.hdf5' in file_name][0]
+    csv_file = path/f'{hdf5_name.split('.')[0]}.csv'
 
-exp = tools.configurate_data(exp)
+    old_exp = Experiment.load_hdf5(path/hdf5_name)
+    old_exp.
+exp = Experiment()
+exp.load_csv(*input_path())
+temporal_plot(exp)
+
+exp = configurate_data(exp)
 
 plots.temperature_plot(
     exp,
@@ -34,10 +44,10 @@ plots.temperature_plot(
     interactive=True,
 )
 
-info, result, func = tools.regress(exp)
+info, result, func = regress(exp)
 exp.set_info(**info)
 x = np.linspace(13, 42, 100) + 273.15
-ols_res = tools.Experiment(
+ols_res = Experiment(
     pd.DataFrame({'x': x, 'y': func(x), 'time': x * 0}),
     'interpolated',
 )

@@ -2,14 +2,10 @@ import copy
 import os
 from enum import Enum
 from pathlib import Path
+from typing import Optional, NamedTuple
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
-import statsmodels.api as sm
 from pydantic import BaseModel
-
-from . import functions
 
 pd.set_option("mode.chained_assignment", None)
 
@@ -27,14 +23,10 @@ def input_path(path=""):
     return path
 
 
-class Experiment(BaseModel):
-
-    class Config:
-        arbitrary_types_allowed = True
-
+class Experiment(NamedTuple):
     name: str = ""
     d: pd.DataFrame = None
-    folder: Path
+    folder: Optional[Path] = None
     info: dict = {}
     log: list = []
 
@@ -74,30 +66,30 @@ class Experiment(BaseModel):
         self.info.update(info)
 
     def save_hdf5(self, folder=None):
-        path = folder if folder is not None else self.folder
-        assert path is not None, "Path not define"
-        file_path = f"{path}\{self.name}.hdf5"
+        folder = Path(folder)
+        folder.mkdir(parents=True, exist_ok=True)
+        file_path = folder / f"{self.name}.hdf5"
         with pd.HDFStore(file_path) as file:
             file.put("data", self.d)
             file.get_storer("data").attrs.log = self.log
             file.get_storer("data").attrs.info = self.info
 
-    def apply(self, func):
+    def apply(self, func, x, y, time='time'):
         temp = self.copy()
         (
-            temp.d["time"],
-            temp.d["x"],
-            temp.d["y"],
+            temp.d[time],
+            temp.d[x],
+            temp.d[y],
             comment,
         ) = func(
-            self.d["time"],
-            self.d["x"],
-            self.d["y"],
+            self.d[time],
+            self.d[x],
+            self.d[y],
         )
         temp.log.append({func.__name__: comment})
         return temp
 
-    def group_filter(self, filter, by="x", column="y"):
+    def group_filter(self, filter, by, column):
         temp = copy.deepcopy(self)
         group = self.d.groupby(by=by)[column]
         mask = group.apply(filter).droplevel([0]).sort_index().to_numpy()
@@ -105,4 +97,3 @@ class Experiment(BaseModel):
 
         temp.log.append({filter.__name__: None})
         return temp
-
