@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from base import Experiment
+from Experiments.z_base import Experiment
 import os
 from pathlib import Path
 

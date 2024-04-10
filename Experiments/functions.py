@@ -10,32 +10,16 @@ def nu_D(time, x, y):
     return time, x, y, dict(k=1)
 
 
-def nu_to_v(time, x, y):
-    ro = 1.73
-    y = y / ro
-    return time, x, y, dict()
-
-
-def K_to_C(time, x, y):
-    x = x - 273.15
-    return time, x, y, dict()
-
-
-def C_to_K(time, x, y):
-    x = x + 273.15
-    return time, x, y, dict()
-
-
-def linearize(time, x, y):
-    x = 1 / x
+def linearize(time, T, y):
+    T = 1 / T
     y = np.log(y)
-    return time, x, y, dict()
+    return time, T, y
 
 
 def delinearize(time, x, y):
     x = 1 / x
     y = np.exp(y)
-    return time, x, y, dict()
+    return time, x, y
 
 
 ## Group filters
@@ -58,5 +42,4 @@ def iqr_filter(data: pd.Series):
     q1 = data.quantile(0.25)
     q3 = data.quantile(0.75)
     iqr = q3 - q1 + 1e-50
-
     return np.abs((data - data.median()) / iqr) < 1
