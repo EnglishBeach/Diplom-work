@@ -8,6 +8,7 @@ from pydantic import BaseModel
 import pandas as pd
 
 pd.set_option("mode.chained_assignment", None)
+T_ZERO = 273.15
 
 
 class Mols(Enum):
@@ -17,28 +18,40 @@ class Mols(Enum):
     peta = 'PET'
 
 
-class Experiment(BaseModel):
-    name: Optional[str] = None
-    d: Optional[pd.DataFrame] = None
-    source: Optional[Path] = None
-    info: dict = {}
-    lims: dict = {}
+class Experiment:
+    def __init__(
+        self,
+        name: Optional[str] = None,
+        d: Optional[pd.DataFrame] = None,
+        source: Optional[Path] = None,
+        info: dict = {},
+        lims: dict = {},
+    ) -> None:
+
+        self.name = name
+        self.d = d
+        self.source = source
+        self.info = info
+        self.lims = lims
 
     def __repr__(self) -> str:
         return f"<Experiment {self.name} {self.source.stem}>"
 
-    def load_csv(self, path):
+    def read_csv(self, path):
         path = Path(path)
         self.d = pd.read_csv(path)
         self.source = path
 
-    def load_hdf5(self, path):
+    @classmethod
+    def from_hdf5(cls, path):
+        exp = cls()
         path = Path(path)
-        self.source = path
+        exp.source = path
         with pd.HDFStore(path) as file:
-            self.d = file.get("data")
-            self.info = file.get("info").to_dict()
-            self.lims = file.get('lims').to_dict()
+            exp.d = file.get("data")
+            exp.info = file.get("info").to_dict()
+            exp.lims = file.get('lims').to_dict()
+        return exp
 
     def save_hdf5(self, folder=None):
         folder = Path(folder)
@@ -60,6 +73,3 @@ class Experiment(BaseModel):
 
         temp.info.append({filter.__name__: None})
         return temp
-
-    class Config:
-        arbitrary_types_allowed = True
