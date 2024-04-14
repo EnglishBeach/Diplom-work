@@ -14,7 +14,7 @@ T_ZERO = 273.15
 class Mols(Enum):
     butanol = 'BUT'
     ocm = 'OCM'
-    dmag = 'DMA'
+    dmeg = 'DME'
     peta = 'PET'
 
 
