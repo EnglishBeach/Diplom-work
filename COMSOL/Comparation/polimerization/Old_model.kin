@@ -1,0 +1,20 @@
+<Reactions>
+
+Q = D
+D + M = P
+P + M = P
+P = P_prod
+P + P = P_prod
+
+<Initial concentrations>
+
+
+<Temperature>
+
+298.15, 0, 0
+
+<Time grid>
+
+0 (auto) 1
+
+<End of data>

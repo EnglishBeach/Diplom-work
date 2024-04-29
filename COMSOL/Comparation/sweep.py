@@ -27,7 +27,7 @@ def get_combinations(combination_dict: dict[list]) -> dict:
     return (dict(zip(keys, v)) for v in itertools.product(*values))
 
 
-def sweep(Y1: Solver, Y2: Solver,init={}):
+def sweep(Y1: Solver, Y2: Solver, init={}):
     data = []
     k_dict = Y2.K
     desc = tqdm(total=3 ** (len(k_dict)))
@@ -57,7 +57,7 @@ def sweep(Y1: Solver, Y2: Solver,init={}):
     df.to_csv('result.csv')
 
 
-class K(tools.K):
+class K(tools.K_gen):
     # INITIATION
     l = 1e9 * 0.00001  # 8 10
     l_ = 1e5  # 5 6
@@ -83,7 +83,7 @@ class K(tools.K):
     rD = 1e9
 
 
-class K_sweep(tools.K):
+class K_sweep(tools.K_gen):
     # INITIATION
 
     l = 1e9 * 0.00001  # 8 10

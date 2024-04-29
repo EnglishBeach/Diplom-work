@@ -13,7 +13,7 @@ plt.rc('legend', fontsize=10)
 plt.rcParams["figure.figsize"] = (10, 7)
 
 
-class K(dict):
+class K_gen(dict):
     def __init__(self):
         consts = {
             key: value
@@ -36,7 +36,7 @@ def get_init(comps_str: str, init: list):
 
 
 class Solver:
-    def __init__(self, system, K: K, initial: dict, T: np.ndarray) -> None:
+    def __init__(self, system, K: K_gen, initial: dict, T: np.ndarray) -> None:
         self._system = system
         self.K = K
         self.T = T
@@ -57,10 +57,12 @@ class Solver:
         for key, value in K.items():
             k[key] = value
 
+        # print('*' * 50)
         for method in [
             'BDF',
             'Radau',
             'LSODA',
+            'RK45',
         ]:
             solution = solve_ivp(
                 fun=self._system,
@@ -69,9 +71,11 @@ class Solver:
                 args=(k,),
                 method=method,
                 dense_output=True,
-                # rtol=0.01,s
+                rtol=0.00001,
+                max_step=self.T[1],
             )
             self.y = solution.sol(self.T)
+            # print(method)
             if self.is_correct():
                 break
 
@@ -89,6 +93,23 @@ class Solver:
         return self.y[self._comp[value]]
 
 
+class Sweeper:
+    def __init__(self, y1, y2) -> None:
+        self.y1: Solver = y1
+        self.y2: Solver = y2
+        self.K = y1.K
+        self.T = y1.T
+
+        self.initial = self.y1.initial
+
+    def __getitem__(self, comp):
+        sigma = 1e-9
+        return self.y1[comp] - self.y2[comp]
+
+    def solve(self, initial={}, K={}):
+        self.y2.solve(initial=initial, K=K)
+
+
 class Comparator:
     def __init__(self, y1, y2) -> None:
         self.y1: Solver = y1
@@ -96,25 +117,12 @@ class Comparator:
         self.K = y1.K
         self.T = y1.T
 
-    def __getitem__(self, comp):
-        sigma = 1e-9
-        return self.y1[comp] - self.y2[comp]
-
-    def solve(self, initial=None, K=None):
-        self.y2.solve(initial=initial, K=K)
-
-
-class Differ:
-    def __init__(self, y1, y2) -> None:
-        self.y1: Solver = y1
-        self.y2: Solver = y2
-        self.K = y1.K
-        self.T = y1.T
+        self.initial = self.y1.initial
 
     def __getitem__(self, comp):
         sigma = 1e-9
         return self.y1[comp] - self.y2[comp]
 
-    def solve(self, initial=None, K=None):
+    def solve(self, initial={}, K={}):
         self.y1.solve(initial=initial, K=K)
         self.y2.solve(initial=initial, K=K)
