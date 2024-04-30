@@ -97,10 +97,10 @@ class Sweeper:
     def __init__(self, y1, y2) -> None:
         self.y1: Solver = y1
         self.y2: Solver = y2
-        self.K = y1.K
+        self.K = y2.K
         self.T = y1.T
 
-        self.initial = self.y1.initial
+        self.initial = self.y2.initial
 
     def __getitem__(self, comp):
         sigma = 1e-9
