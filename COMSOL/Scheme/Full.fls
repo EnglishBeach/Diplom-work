@@ -216,10 +216,13 @@ INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx7.tfm
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm
 OUTPUT Full.pdf
 INPUT d:/Programs/TEX/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map
 INPUT Full.aux
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb

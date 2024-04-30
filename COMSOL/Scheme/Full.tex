@@ -2,6 +2,7 @@
 \usepackage{chemfig}
 \usepackage[a4paper, total={8in, 11in}]{geometry}
 
+
 \def\IRP{$\left[Q^{\bullet -},DH^{\bullet +}\right]{}_s$}
 \def\RP{$\left[QH^{\bullet },D^{\bullet }\right]$}
 \def\R{$QH^{\bullet }+D^{\bullet }$}
@@ -9,187 +10,244 @@
 \def\QH{$QH^{\bullet }$}
 \def\D{$D^{\bullet }$}
 \def\Q{$Q$}
-\def\Qt{$Q^{*}$}
+\def\Qt{$^{3}Q$}
 \def\DH{$DH$}
 \def\QHH{$QHH$}
 \def\QHD{$QHD$}
 \def\QD{$QD^{\bullet }$}
 
+% \renewcommand{\baselinestretch}{1.5}
+
 \begin{document}
 
-\textbf{-------------------- FULL SYSTEM --------------------}
+% \begin{tabular}{ c c }
+
+%      & \begin{tabular}{ l l l }
+
+%        \end{tabular}
+\vspace{1.5mm}
+% \end{tabular}
+\vspace{1.5mm}
+
+\textbf{----------------------------------------------------- FULL SYSTEM -----------------------------------------------------}
+\\
+\\
 
 \textbf{Activation:}
-
-\schemestart
-\Q
+\begin{tabular}{ c c }
+    \schemestart
+    \Q
     \arrow{<=>[$h\nu$, $k_l$][$k_{-l}$]}
-\Qt
-\schemestop
+    \Qt
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_l}$    & = 1e8 - 1e10 & $c^{-1}$ \\
+           $\mathbf{k_{-l}}$ & = 1e5  - 1e6 & $c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 \\
-
-$k_l$ = 1e8 - 1e10
-
-$k_{-l}$ = 1e5  - 1e6
 \\
+\textbf{Quenching:}
 
-\textbf{Quenching - \Qt:}
+\begin{tabular}{ c c }
+    \schemestart
+    \Qt + \DH
+    \arrow(c1--c2){<=>[$k_{qE}$][$k_{-qE}$]}
+    \IRP
+    \arrow(@c2--c3){->[$k_H$]}
+    $\left[Q^{\bullet},DH^{\bullet}\right]{}_s$
+    \arrow{->[$k_{diff}$]}
+    \QH + \D
+    \arrow(@c2--c4){->[*{0.180}$k_{diff}$]}[-90]
+    $Q_s^{\bullet -} + DH_s^{\bullet +}$
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{qE}}$   & = 1e8 - 1e10 & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{-qE}}$  & = 1e7 - 1e9  & $c^{-1}$       \\
+           $\mathbf{k_H}$      & = 1e8 - 1e10 & $c^{-1}$       \\
+           $\mathbf{k_{diff}}$ & = 1e8 - 1e9  & $c^{-1}$       \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+    \\
+\end{tabular}
+\vspace{1.5mm}
 
-\schemestart
-\Qt + \DH
-    \arrow{<=>[$k_{qE}$][$k_{-qE}$]}
-\IRP
-    \arrow{->[$k_H$]}
-\QH + \D
-\schemestop
-\\
-
-$k_{qE}$ = 1e8 - 1e10
-
-$k_{-qE}$ = 1e7 - 1e9
-
-$k_H$ = 1e8 - 1e10
-\\
-
-\schemestart
-\Qt + \QHH
+\begin{tabular}{ c c }
+    \schemestart
+    \Qt + \QHH
     \arrow{->[$k_{qH}$]}
-2\QH
+    2\QH
     \arrow{<=>[$k_{redQ}$][$k_{oxQ}$]}
-\Q + \QHH
-\schemestop
-\\
+    \Q + \QHH
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{qH}}$   & = 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{oxQ}}$  & = 1         & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{redQ}}$ & = 1e9       & $M^{-1}c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
-$k_{qH}$ = 1e5 - 1e9
 
-$k_{oxQ}$ =1
-
-$k_{redQ}$ = 1e9
-\\
-
-\schemestart
-\Qt + \QHD
+\begin{tabular}{ c c }
+    \schemestart
+    \Qt + \QHD
     \arrow{->[$k_{qQD}$]}
-\QH + \QD
-\schemestop
-\\
+    \QH + \QD
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{qQD}}$ & = ? & $M^{-1}c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
-$k_{qQD}$ = ? (2)
-\\
 
-\schemestart
-\Qt
+\begin{tabular}{ c c }
+    \schemestart
+    \Qt
     \arrow{->[$k_{qPh}$]}
-prod
-\schemestop
+    prod
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{qPh}}$ & = 1e9 (1e-5) & $c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 \\
-
-$k_{qPh}$ = 1e9 (1e-5)
 \\
-
 \textbf{Other:}
 
-\schemestart
-\Q + \D
+\begin{tabular}{ c c }
+    \schemestart
+    \Q + \D
     \arrow{<=>[$k_{D}$][$k_{-D}$]}
-\QD
-\schemestop
-\\
+    \QD
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{D}}$  & = ?(1)   & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{-D}}$ & = (0.05) & $c^{-1}$       \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
-$k_{D}$ = ?(1)
 
-$k_{-D}$ = (0.05)
-\\
-
-
-\schemestart
-\QH + \D
+\begin{tabular}{ c c }
+    \schemestart
+    \QH + \D
     \arrow{->[$k_{r}$]}
-\QHD
+    \QHD
     \arrow{->[$k_{p}$]}
-\QHH + N-prod
-\schemestop
-\\
+    \QHH + N-prod
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{r}}$ & = ?(1e9)      & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{p}}$ & = 1e-5 - 1e-3 & $c^{-1}$       \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
-$k_{r}$ = ?(1e9)
-
-$k_{p}$ = 1e-5 - 1e-3
-\\
-
-\schemestart
-2\D
+\begin{tabular}{ c c }
+    \schemestart
+    2\D
     \arrow{->[$k_{rD}$]}
-N-prod
-\schemestop
-\\
+    N-prod
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{rD}}$ & = ? (1e9) & $M^{-1}c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
-$k_{rD}$ = ? (1e9)
 
 \newpage
 
-\textbf{-------------------- SIMPLE SYSTEM --------------------}
-
+\textbf{----------------------------------------------------- SIMPLE SYSTEM -----------------------------------------------------}
+\\
+\\
 \textbf{Activation:}
-
-\schemestart
-\Q
+\begin{tabular}{ c c }
+    \schemestart
+    \Q
     \arrow{<=>[$h\nu$, $k_l$][$k_{-l}$]}
-\Qt
-\schemestop
+    \Qt
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_l}$    & = 1e8 - 1e10 & $c^{-1}$ \\
+           $\mathbf{k_{-l}}$ & = 1e5  - 1e6 & $c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 \\
-
-$k_l$ = 1e8 - 1e10
-
-$k_{-l}$ = 1e5  - 1e6
 \\
+\textbf{Quenching:}
 
-\textbf{Quenching - \Qt:}
-
-\schemestart
-\Qt + \DH
+\begin{tabular}{ c c }
+    \schemestart
+    \Qt + \DH
     \arrow{->[$k_H$]}
-\QH + \D
-\schemestop
-\\
+    \QH + \D
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_H}$ & = 1e8 - 1e10 & $M^{-1}c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
-$k_H$ = 1e8 - 1e10
-\\
 
-\schemestart
-\Qt + \QHH
+\begin{tabular}{ c c }
+    \schemestart
+    \Qt + \QHH
     \arrow{->[$k_{qH}$]}
-2\QH
+    2\QH
     \arrow{->[$k_{redQ}$]}
-\Q + \QHH
-\schemestop
+    \Q + \QHH
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{qH}}$            & = 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
+           $\mathbf{\mathbf{k_{redQ}}}$ & = 1e9       & $M^{-1}c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 \\
-
-$k_{qH}$ = 1e5 - 1e9
-
-$k_{redQ}$ = 1e9
 \\
-
-
 \textbf{Other:}
 
-\schemestart
-\QH + \D
+\begin{tabular}{ c c }
+    \schemestart
+    \QH + \D
     \arrow{->[$k_{r}$]}
-\QHD
-\schemestop
-\\
+    \QHD
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{r}}$ & = ?(1e9) & $c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
-$k_{r}$ = ?(1e9)
-\\
 
-\schemestart
-2\D
+\begin{tabular}{ c c }
+    \schemestart
+    2\D
     \arrow{->[$k_{rD}$]}
-N-prod
-\schemestop
-\\
-
-$k_{rD}$ = ? (1e9)
-
+    N-prod
+    \schemestop
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{rD}}$ & = ? (1e9) & $c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
 
 \end{document}
