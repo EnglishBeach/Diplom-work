@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.6.9)  30 APR 2024 23:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.6.9)  1 MAY 2024 19:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -321,19 +321,19 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
 * driver: pdftex
-* paper: a4paper
+* paper: a3paper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(9.67393pt, 578.15999pt, 9.67395pt)
-* v-part:(T,H,B)=(20.03073pt, 794.96999pt, 30.04613pt)
-* \paperwidth=597.50787pt
-* \paperheight=845.04684pt
+* h-part:(L,W,R)=(133.44342pt, 578.15999pt, 133.44344pt)
+* v-part:(T,H,B)=(188.9263pt, 722.7pt, 283.38945pt)
+* \paperwidth=845.04684pt
+* \paperheight=1195.01575pt
 * \textwidth=578.15999pt
-* \textheight=794.96999pt
-* \oddsidemargin=-62.59605pt
-* \evensidemargin=-62.59605pt
-* \topmargin=-89.23926pt
+* \textheight=722.7pt
+* \oddsidemargin=61.17343pt
+* \evensidemargin=61.17343pt
+* \topmargin=79.65631pt
 * \headheight=12.0pt
 * \headsep=25.0pt
 * \topskip=10.0pt
@@ -351,6 +351,10 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 27.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 27.
 
 Underfull \hbox (badness 10000) in paragraph at lines 32--35
 
@@ -361,48 +365,49 @@ Underfull \hbox (badness 10000) in paragraph at lines 32--35
 
  []
 
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <7> on input line 37.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <5> on input line 37.
 
 Underfull \hbox (badness 10000) in paragraph at lines 36--53
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 109--124
+Overfull \hbox (54.59433pt too wide) in paragraph at lines 54--78
+[][]
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 111--126
 
  []
 
 [1
 
 {d:/Programs/TEX/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Underfull \hbox (badness 10000) in paragraph at lines 172--192
+Underfull \hbox (badness 10000) in paragraph at lines 174--194
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 172--192
+Underfull \hbox (badness 10000) in paragraph at lines 174--194
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 207--225
+Underfull \hbox (badness 10000) in paragraph at lines 209--227
 
  []
 
 [2] (./Full.aux) ) 
 Here is how much of TeX's memory you used:
- 13638 strings out of 477372
- 283778 string characters out of 5827292
- 1899751 words of memory out of 5000000
- 33712 multiletter control sequences out of 15000+600000
+ 13647 strings out of 477372
+ 283910 string characters out of 5827292
+ 1902751 words of memory out of 5000000
+ 33721 multiletter control sequences out of 15000+600000
  514314 words of font info for 37 fonts, out of 8000000 for 9000
  452 hyphenation exceptions out of 8191
  117i,16n,118p,486b,735s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb><d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on Full.pdf (2 pages, 85759 bytes).
+Output written on Full.pdf (2 pages, 86135 bytes).
 PDF statistics:
  49 PDF objects out of 1000 (max. 8388607)
  30 compressed objects within 1 object stream
