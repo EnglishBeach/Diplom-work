@@ -1,0 +1,326 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.3' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9668,        316]
+NotebookOptionsPosition[      9166,        300]
+NotebookOutlinePosition[      9620,        317]
+CellTagsIndexPosition[      9577,        314]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{"TRP", " ", "=", " ", 
+  SubscriptBox[
+   RowBox[{"[", 
+    RowBox[{
+     SuperscriptBox["Q", "\[FilledSmallCircle]"], ",", 
+     SuperscriptBox[
+      RowBox[{"[", "DH", "]"}], "\[FilledSmallCircle]"]}], "]"}], 
+   "s"]}], "\n", 
+ RowBox[{"TRI", " ", "=", " ", 
+  SubscriptBox[
+   RowBox[{"[", 
+    RowBox[{
+     SuperscriptBox["Q", 
+      RowBox[{"\[FilledSmallCircle]", "-"}]], ",", 
+     SuperscriptBox[
+      RowBox[{"[", "DH", "]"}], 
+      RowBox[{"\[FilledSmallCircle]", "+"}]]}], "]"}], 
+   "s"]}], "\[IndentingNewLine]", 
+ RowBox[{
+  SubscriptBox["R", "l"], "=", 
+  RowBox[{
+   SubscriptBox["k", "l"], " ", "[", "Q", "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", 
+   RowBox[{"-", "l"}]], "=", 
+  RowBox[{
+   SubscriptBox["k", 
+    RowBox[{"-", "l"}]], " ", "[", 
+   RowBox[{
+    SuperscriptBox["\[InvisiblePrefixScriptBase]", "3"], "Q"}], "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "qE"], "=", 
+  RowBox[{
+   RowBox[{
+    SubscriptBox["k", "qE"], " ", "[", 
+    RowBox[{
+     SuperscriptBox["\[InvisiblePrefixScriptBase]", "3"], "Q"}], "]"}], " ", 
+   "[", "DH", "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", 
+   RowBox[{"-", "qE"}]], "=", 
+  RowBox[{
+   SubscriptBox["k", 
+    RowBox[{"-", "qE"}]], " ", "[", "TRI", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  SubscriptBox["R", "H"], "=", 
+  RowBox[{
+   SubscriptBox["k", "H"], " ", "[", "TRI", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  SubscriptBox["R", "TRI_diff"], "=", 
+  RowBox[{
+   SubscriptBox["k", "diff"], " ", "[", "TRI", "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  SubscriptBox["R", "TRP_diff"], "=", 
+  RowBox[{
+   SubscriptBox["k", "diff"], " ", "[", "TRP", "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "qH"], "=", 
+  RowBox[{
+   RowBox[{
+    SubscriptBox["k", "qH"], " ", "[", 
+    RowBox[{
+     SuperscriptBox["\[InvisiblePrefixScriptBase]", "3"], "Q"}], "]"}], " ", 
+   "[", "QHH", "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "redQ"], "=", 
+  RowBox[{
+   RowBox[{
+    SubscriptBox["k", "redQ"], " ", "[", 
+    SuperscriptBox["QH", "\[FilledSmallCircle]"], "]"}], "[", 
+   SuperscriptBox["QH", "\[FilledSmallCircle]"], "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "oxQ"], "=", 
+  RowBox[{
+   RowBox[{
+    SubscriptBox["k", "oxQ"], " ", "[", "Q", "]"}], " ", "[", "QHH", 
+   "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "qQD"], "=", 
+  RowBox[{
+   RowBox[{
+    SubscriptBox["k", "qQD"], " ", "[", 
+    RowBox[{
+     SuperscriptBox["\[InvisiblePrefixScriptBase]", "3"], "Q"}], "]"}], " ", 
+   "[", "QHD", "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "qPh"], "=", 
+  RowBox[{
+   SubscriptBox["k", "qPh"], "[", 
+   RowBox[{
+    SuperscriptBox["\[InvisiblePrefixScriptBase]", "3"], "Q"}], "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "D"], "=", 
+  RowBox[{
+   RowBox[{
+    SubscriptBox["k", "D"], "[", "Q", "]"}], " ", "[", 
+   SuperscriptBox["D", "\[FilledSmallCircle]"], "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", 
+   RowBox[{"-", "D"}]], "=", 
+  RowBox[{
+   SubscriptBox["k", 
+    RowBox[{"-", "D"}]], " ", "[", 
+   SuperscriptBox["QD", "\[FilledSmallCircle]"], "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "r"], "=", 
+  RowBox[{
+   RowBox[{
+    SubscriptBox["k", "r"], " ", "[", 
+    SuperscriptBox["QH", "\[FilledSmallCircle]"], "]"}], "[", 
+   SuperscriptBox["D", "\[FilledSmallCircle]"], "]"}]}], "\n", 
+ RowBox[{
+  SubscriptBox["R", "p"], "=", 
+  RowBox[{
+   SubscriptBox["k", "p"], " ", "[", "QHD", "]"}]}], "\n", 
+ RowBox[{
+  RowBox[{
+   SubscriptBox["R", "rD"], "=", 
+   RowBox[{
+    RowBox[{
+     SubscriptBox["k", "rD"], "[", 
+     SuperscriptBox["D", "\[FilledSmallCircle]"], "]"}], "[", 
+    SuperscriptBox["D", "\[FilledSmallCircle]"], "]"}]}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", "Q", "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   RowBox[{"-", 
+    SubscriptBox["R", "l"]}], "+", 
+   SubscriptBox["R", 
+    RowBox[{"-", "l"}]], "+", 
+   SubscriptBox["R", "redQ"], "-", 
+   SubscriptBox["R", "oxQ"], "-", 
+   SubscriptBox["R", "D"], "+", 
+   SubscriptBox["R", 
+    RowBox[{"-", "D"}]]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", 
+     RowBox[{
+      SuperscriptBox["\[InvisiblePrefixScriptBase]", "3"], "Q"}], "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   SubscriptBox["R", "l"], "-", 
+   SubscriptBox["R", 
+    RowBox[{"-", "l"}]], "-", 
+   SubscriptBox["R", "qE"], "+", 
+   SubscriptBox["R", 
+    RowBox[{"-", "qE"}]], "-", 
+   SubscriptBox["R", "qH"], "-", 
+   SubscriptBox["R", "qQD"], "-", 
+   SubscriptBox["R", "qPh"]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", "DH", "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   RowBox[{"-", 
+    SubscriptBox["R", "qE"]}], "+", 
+   SubscriptBox["R", 
+    RowBox[{"-", "qE"}]]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", "TRI", "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   SubscriptBox["R", "qE"], "-", 
+   SubscriptBox["R", 
+    RowBox[{"-", "qE"}]], "-", 
+   SubscriptBox["R", "TRI_diff"], "-", 
+   SubscriptBox["R", "H"]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", "TRP", "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   SubscriptBox["R", "H"], "-", 
+   SubscriptBox["R", "TRP_diff"]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", 
+     SubsuperscriptBox["Q", "s", 
+      RowBox[{"\[FilledSmallCircle]", "-"}]], "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  SubscriptBox["R", "TRI_diff"]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", 
+     SubsuperscriptBox["DH", "s", 
+      RowBox[{"\[FilledSmallCircle]", "+"}]], "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  SubscriptBox["R", "TRI_diff"]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", 
+     SuperscriptBox["QH", "\[FilledSmallCircle]"], "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   SubscriptBox["R", "TRP_diff"], "+", 
+   RowBox[{"2", " ", 
+    SubscriptBox["R", "qH"]}], "-", 
+   RowBox[{"2", " ", 
+    SubscriptBox["R", "redQ"]}], "+", 
+   RowBox[{"2", " ", 
+    SubscriptBox["R", "oxQ"]}], "+", 
+   SubscriptBox["R", "qQD"], "-", 
+   SubscriptBox["R", "r"]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", 
+     SuperscriptBox["D", "\[FilledSmallCircle]"], "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   SubscriptBox["R", "TRP_diff"], "-", 
+   SubscriptBox["R", "D"], "+", 
+   SubscriptBox["R", 
+    RowBox[{"-", "D"}]], "-", 
+   SubscriptBox["R", "r"], "-", 
+   RowBox[{"2", " ", 
+    SubscriptBox["R", "rD"]}]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", "QHH", "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   RowBox[{"-", 
+    SubscriptBox["R", "qH"]}], "+", 
+   SubscriptBox["R", "redQ"], "-", 
+   SubscriptBox["R", "oxQ"], "+", 
+   SubscriptBox["R", "p"]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", "QHD", "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   RowBox[{"-", 
+    SubscriptBox["R", "qQD"]}], "+", 
+   SubscriptBox["R", "r"], "-", 
+   SubscriptBox["R", "p"]}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  FractionBox[
+   RowBox[{"\[PartialD]", 
+    RowBox[{"[", 
+     SuperscriptBox["QD", "\[FilledSmallCircle]"], "]"}]}], 
+   RowBox[{"\[PartialD]", "t"}]], "=", 
+  RowBox[{
+   SubscriptBox["R", "qQD"], "+", 
+   SubscriptBox["R", "D"], "-", 
+   SubscriptBox["R", 
+    RowBox[{"-", "D"}]]}]}]}], "Input",
+ CellChangeTimes->{{3.9235445464007683`*^9, 3.9235447840676756`*^9}, {
+  3.923544896068921*^9, 3.9235450555646973`*^9}, {3.923545114886845*^9, 
+  3.9235452136834297`*^9}, {3.9235453323332043`*^9, 3.923545332344205*^9}, {
+  3.923545371246369*^9, 3.9235454079681063`*^9}, {3.9235454670795083`*^9, 
+  3.923545505824819*^9}, {3.9235455530695186`*^9, 3.9235455544923415`*^9}, {
+  3.923545795097184*^9, 3.9235460479189367`*^9}, {3.923548012524502*^9, 
+  3.923548261980155*^9}, {3.923548302984702*^9, 3.9235484489803157`*^9}, {
+  3.9235488003982525`*^9, 
+  3.923548817742919*^9}},ExpressionUUID->"a5734e9f-2251-4e26-a654-\
+302385db3a68"],
+
+Cell[BoxData[""], "Input",
+ CellChangeTimes->{{3.9235450602566366`*^9, 
+  3.923545104881218*^9}},ExpressionUUID->"bf2d43cc-6bfe-4b42-9ef0-\
+5f5d43c67f86"]
+},
+WindowSize->{1152., 595.8},
+WindowMargins->{{1146.6, Automatic}, {Automatic, -5.3999999999999995`}},
+Magnification:>1.9 Inherited,
+FrontEndVersion->"12.3 for Microsoft Windows (64-bit) (June 19, 2021)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"b8444d0a-b4da-4597-9d31-e2f3c81b018a"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 8447, 273, 1710, "Input",ExpressionUUID->"a5734e9f-2251-4e26-a654-302385db3a68"],
+Cell[9008, 295, 154, 3, 53, "Input",ExpressionUUID->"bf2d43cc-6bfe-4b42-9ef0-5f5d43c67f86"]
+}
+]
+*)
+
+(* End of internal cache information *)
+
