@@ -28,30 +28,38 @@
 \textbf{----------------------------------------------------- FULL POLIMERIZATION -----------------------------------------------------}
 \\
 \\
+\schemestart
+\D + M
+\arrow{->[$k_{init}$]}
+$\sim$$P^{\bullet }$
+\schemestop
+\\
+\\
 \begin{tabular}{ l l l l }
-    \textbf{Initiation}:    &
+    \textbf{Initiation}:     &
     \schemestart
     \D + M
     \arrow{->[$k_{init}$]}
-    \R
-    \schemestop             &
-    $\mathbf{k_{init}}$     & $\approx$ $M^{-1}c^{-1}$ \\
-
-    \textbf{Propagation}:   &
-    \schemestart
-    \R + M
-    \arrow{->[$k_{prop}$]}
     $\sim$$P_1^{\bullet }$
-    \schemestop             &
-    $\mathbf{k_{prop}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+    \schemestop              &
+    $\mathbf{k_{init}}$      & $\approx$ $M^{-1}c^{-1}$ \\
 
-                            &
-            \schemestart
-        $\sim$$P_n^{\bullet }$ + M
-        \arrow{->[$k_{prop}$]}
-    $\sim$$P_{n+1}^{\bullet }$
-    \schemestop             &
-    $\mathbf{k_{prop}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+    \textbf{Propagation}:    &
+                \schemestart
+            $\sim$$P_n^{\bullet }$ + M
+            \arrow{->[$k_{prop}$]}
+        $\sim$$P_{n+1}^{\bullet }$
+    \schemestop              &
+    $\mathbf{k_{prop}}$      & $\approx$ $M^{-1}c^{-1}$ \\
+
+                             &
+                \schemestart
+            $M^{\bullet}$ + M
+                \arrow{->[$k_{prop}$]}
+            $\sim$$P_2^{\bullet }$
+    \schemestop              &
+                             &                          \\
+
 
             % \textbf{Addition}:                &
             % \schemestart
@@ -62,38 +70,54 @@
             %                                   &
             % $\mathbf{k_{add}}$ $\approx$      & $M^{-1}c^{-1}$ \\
 
-    \textbf{Transfer}:      &
+    \textbf{Transfer}:       &
             \schemestart
-        $\sim$$P_n^{\bullet}$ + X
-        \arrow{->[$k_{trans}$]}
-    $X^{\bullet}$ +$\sim$$P_n$
-    \schemestop             &
-    $\mathbf{k_{trans}}$    & $\approx$ $M^{-1}c^{-1}$ \\
+        $\sim$$P_n^{\bullet}$ + Sol
+                \arrow{->[$k_{trans-sol}$]}
+            $Sol^{\bullet}$ + $\sim$$P_n$
+    \schemestop              &
+    $\mathbf{k_{trans-sol}}$ & $\approx$ $M^{-1}c^{-1}$ \\
 
-    \textbf{Termination:}   &
+                             &
+            \schemestart
+        $\sim$$P_n^{\bullet}$ + M
+                \arrow{->[$k_{trans-m}$]}
+            $M^{\bullet}$ + $\sim$$P_n$
+    \schemestop              &
+    $\mathbf{k_{trans-m}}$   & $\approx$ $M^{-1}c^{-1}$ \\
+
+    \textbf{Inhibition}:     &
+            \schemestart
+        $\sim$$P_n^{\bullet}$ + Z
+                \arrow{->[$k_{inh}$]}
+            $Z^{\bullet}$ + $\sim$$P_n$
+    \schemestop              &
+    $\mathbf{k_{inh}}$       & $\approx$ $M^{-1}c^{-1}$ \\
+
+    \textbf{Termination:}    &
             \schemestart
         $\sim$$P_n^{\bullet}$
-        \arrow{->[$k_{ter-lin}$]}
-    $\sim$$P_n$
+                \arrow{->[$k_{ter-lin}$]}
+            $\sim$$P_n$
             \schemestop
-                            &
-    $\mathbf{k_{ter-l}}$    & $\approx$ $M^{-1}c^{-1}$ \\
+                             &
+    $\mathbf{k_{ter-l}}$     & $\approx$ $M^{-1}c^{-1}$ \\
 
-                            &
+                             &
             \schemestart
         $\sim$$P_n^{\bullet }$ + $\sim$$P_k^{\bullet }$
             \arrow{->[$k_{ter-rec}$]}
         $\sim$$P_n$--$P_k$$\sim$
-    \schemestop             &
-    $\mathbf{k_{ter-rec}}$  & $\approx$ $M^{-1}c^{-1}$ \\
+    \schemestop              &
+    $\mathbf{k_{ter-rec}}$   & $\approx$ $M^{-1}c^{-1}$ \\
 
-                            &
+                             &
             \schemestart
         $\sim$$P_n^{\bullet }$  + $\sim$$P_k^{\bullet }$
             \arrow{->[$k_{ter-disp}$]}
         $\sim$$P_{n-1}=CH_2$ + $\sim$$P_{k-1}-CH_3$
-    \schemestop             &
-    $\mathbf{k_{ter-disp}}$ & $\approx$ $M^{-1}c^{-1}$ \\
+    \schemestop              &
+    $\mathbf{k_{ter-disp}}$  & $\approx$ $M^{-1}c^{-1}$ \\
 \end{tabular}
 \vspace{1.5mm}
 
