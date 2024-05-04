@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1714616549 "d:/WORKS/Diplom-work/COMSOL/Scheme/Full.tex" "Full.pdf" "Full" 1714616550 0
-  "Full.aux" 1714616550 652 996c20c7d2ba709ac23c84e45aedb03c "pdflatex"
-  "Full.tex" 1714616548 5864 802aa0be21397f56be6b1c843971c7ac ""
+["pdflatex"] 1714823728 "d:/WORKS/Diplom-work/COMSOL/Scheme/Full.tex" "Full.pdf" "Full" 1714823730 0
+  "Full.aux" 1714823729 903 fefd53a7c054ea3dd7e744cf1da66f78 "pdflatex"
+  "Full.tex" 1714823726 8335 a89438031058de46706975244e336301 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1686313687 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm" 1686311073 1328 c834bbb027764024c09d3d2bf908b5f0 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx5.tfm" 1686311073 1332 f817c21a1ba54560425663374f1b651a ""
@@ -12,6 +12,7 @@
   "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1686309485 36281 c355509802a035cadc5f15869451dcee ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1686309485 35752 024fb6c41858982481f6968b5fc26508 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1686309485 32762 7fee39e011c23b3589931effd97b9702 ""
+  "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1686309485 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1686309485 32716 08e384dc442464e7285e891af9f45947 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii" 1686316322 71627 94eb9990bed73c364d7f53f960cc8c5b ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/generic/chemfig/chemfig.sty" 1686310897 388 2f9ccd1a71661ff4bea57e7855b0518e ""
@@ -86,6 +87,7 @@
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/graphics/trig.sty" 1686314070 4023 293ea1c16429fc0c4cf605f4da1791a9 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def" 1686314869 29940 9473d58112bc8a88f5505b823a053dde ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg" 1686315131 678 4792914a8f45be57bb98413425e4c7af ""
+  "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/makecell/makecell.sty" 1686315664 15773 2dd7dde1ec1c2a3d0c85bc3b273e04d8 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty" 1686316827 1090 bae35ef70b3168089ef166db3e66f5b2 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty" 1686316827 373 00b204b1d7d095b892ad31a7494b0373 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty" 1686316827 21013 f4ff83d25bb56552493b030f27c075ae ""
@@ -96,12 +98,13 @@
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/pgf/utilities/pgffor.sty" 1686316827 348 ee405e64380c11319f0e249fed57e6c5 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty" 1686316827 274 5ae372b7df79135d240456a1c6f2cf9a ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty" 1686316827 325 f9f16d12354225b7dd52a3321f085955 ""
+  "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/tools/array.sty" 1686319061 12691 5b542990fe866f3d772f71346cf85b95 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/xcolor/xcolor.sty" 1686319849 56148 51a9a8571c07b9921892ae11063ae853 ""
   "d:/Programs/TEX/texlive/2023/texmf-dist/web2c/texmf.cnf" 1686309277 40967 d940221f8762fd5848760382d97d1226 ""
   "d:/Programs/TEX/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1686320137 415399 118d97d15a79c2bb59091e626dc7e8b0 ""
   "d:/Programs/TEX/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1686320169 6609335 eefc31ffb8ee32eb8382d5cf245a709e ""
   "d:/Programs/TEX/texlive/2023/texmf.cnf" 1686320127 835 15d98ed9a7362f0ac2a0fb81928d01a3 ""
-  "d:/WORKS/Diplom-work/COMSOL/Scheme/Full.tex" 1714616548 5864 802aa0be21397f56be6b1c843971c7ac ""
+  "d:/WORKS/Diplom-work/COMSOL/Scheme/Full.tex" 1714823726 8335 a89438031058de46706975244e336301 ""
   (generated)
   "Full.aux"
   "Full.log"

@@ -194,6 +194,14 @@ INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/makecell/makecell.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/makecell/makecell.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/makecell/makecell.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/makecell/makecell.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/tools/array.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/tools/array.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/tools/array.sty
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/tools/array.sty
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
@@ -227,4 +235,5 @@ INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb
+INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 INPUT d:/Programs/TEX/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb

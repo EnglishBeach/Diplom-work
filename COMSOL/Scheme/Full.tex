@@ -1,7 +1,7 @@
 \documentclass{article}
 \usepackage{chemfig}
-\usepackage[a3paper, total={8in, 10in}]{geometry}
-
+\usepackage[a3paper, total={10in, 13in}]{geometry}
+\usepackage{makecell}
 
 \def\IRP{$\left[Q^{\bullet -},DH^{\bullet +}\right]{}_s$}
 \def\RP{$\left[QH^{\bullet },D^{\bullet }\right]$}
@@ -16,20 +16,90 @@
 \def\QHD{$QHD$}
 \def\QD{$QD^{\bullet }$}
 
-
+\def\R{$R^{\bullet }$}
+\def\P{$\sim$$P^{\bullet }$}
+\def\T{$\sim$$T^{\bullet }$}
 
 \begin{document}
-
-
-\schemestart
-\Q +\DH
-\arrow{->[$h\nu$, $k_H$]}
-\QH + \D
-\schemestop
 \vspace{1.5mm}
 \vspace{1.5mm}
 
-\textbf{----------------------------------------------------- FULL SYSTEM -----------------------------------------------------}
+
+\textbf{----------------------------------------------------- FULL POLIMERIZATION -----------------------------------------------------}
+\\
+\\
+\begin{tabular}{ l l l l }
+    \textbf{Initiation}:    &
+    \schemestart
+    \D + M
+    \arrow{->[$k_{init}$]}
+    \R
+    \schemestop             &
+    $\mathbf{k_{init}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+
+    \textbf{Propagation}:   &
+    \schemestart
+    \R + M
+    \arrow{->[$k_{prop}$]}
+    $\sim$$P_1^{\bullet }$
+    \schemestop             &
+    $\mathbf{k_{prop}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+
+                            &
+            \schemestart
+        $\sim$$P_n^{\bullet }$ + M
+        \arrow{->[$k_{prop}$]}
+    $\sim$$P_{n+1}^{\bullet }$
+    \schemestop             &
+    $\mathbf{k_{prop}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+
+            % \textbf{Addition}:                &
+            % \schemestart
+            % \P + X
+            % \arrow{->[$k_{add}$]}
+            % \T
+            % \schemestop
+            %                                   &
+            % $\mathbf{k_{add}}$ $\approx$      & $M^{-1}c^{-1}$ \\
+
+    \textbf{Transfer}:      &
+            \schemestart
+        $\sim$$P_n^{\bullet}$ + X
+        \arrow{->[$k_{trans}$]}
+    $X^{\bullet}$ +$\sim$$P_n$
+    \schemestop             &
+    $\mathbf{k_{trans}}$    & $\approx$ $M^{-1}c^{-1}$ \\
+
+    \textbf{Termination:}   &
+            \schemestart
+        $\sim$$P_n^{\bullet}$
+        \arrow{->[$k_{ter-lin}$]}
+    $\sim$$P_n$
+            \schemestop
+                            &
+    $\mathbf{k_{ter-l}}$    & $\approx$ $M^{-1}c^{-1}$ \\
+
+                            &
+            \schemestart
+        $\sim$$P_n^{\bullet }$ + $\sim$$P_k^{\bullet }$
+            \arrow{->[$k_{ter-rec}$]}
+        $\sim$$P_n$--$P_k$$\sim$
+    \schemestop             &
+    $\mathbf{k_{ter-rec}}$  & $\approx$ $M^{-1}c^{-1}$ \\
+
+                            &
+            \schemestart
+        $\sim$$P_n^{\bullet }$  + $\sim$$P_k^{\bullet }$
+            \arrow{->[$k_{ter-disp}$]}
+        $\sim$$P_{n-1}=CH_2$ + $\sim$$P_{k-1}-CH_3$
+    \schemestop             &
+    $\mathbf{k_{ter-disp}}$ & $\approx$ $M^{-1}c^{-1}$ \\
+\end{tabular}
+\vspace{1.5mm}
+
+
+\newpage
+\textbf{----------------------------------------------------- FULL INITIATION -----------------------------------------------------}
 \\
 \\
 
@@ -41,8 +111,8 @@
     \Qt
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_l}$    & = 1e8 - 1e10 & $c^{-1}$ \\
-           $\mathbf{k_{-l}}$ & = 1e5  - 1e6 & $c^{-1}$ \\\hline
+           $\mathbf{k_l}$    & $\approx$ 1e8 - 1e10 & $c^{-1}$ \\
+           $\mathbf{k_{-l}}$ & $\approx$ 1e5  - 1e6 & $c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -66,10 +136,10 @@
     $Q_s^{\bullet -} + DH_s^{\bullet +}$
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{qE}}$   & = 1e8 - 1e10 & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{-qE}}$  & = 1e7 - 1e9  & $c^{-1}$       \\
-           $\mathbf{k_{H+}}$   & = 1e8 - 1e10 & $c^{-1}$       \\
-           $\mathbf{k_{diff}}$ & = 1e8 - 1e9  & $c^{-1}$       \\\hline
+           $\mathbf{k_{qE}}$   & $\approx$ 1e8 - 1e10 & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{-qE}}$  & $\approx$ 1e7 - 1e9  & $c^{-1}$       \\
+           $\mathbf{k_{H+}}$   & $\approx$ 1e8 - 1e10 & $c^{-1}$       \\
+           $\mathbf{k_{diff}}$ & $\approx$ 1e8 - 1e9  & $c^{-1}$       \\\hline
        \end{tabular}
     \vspace{1.5mm}
     \\
@@ -85,9 +155,9 @@
     \Q + \QHH
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{qH}}$      & = 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{red/oxQ}}$ & = 1e3       & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{dispQ}}$   & = 1e9       & $M^{-1}c^{-1}$ \\\hline
+           $\mathbf{k_{qH}}$      & $\approx$ 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{red/oxQ}}$ & $\approx$ 1e3       & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{dispQ}}$   & $\approx$ 1e9       & $M^{-1}c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -101,7 +171,7 @@
     \QH + \QD
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{qQD}}$ & = ? & $M^{-1}c^{-1}$ \\\hline
+           $\mathbf{k_{qQD}}$ & $\approx$ ? & $M^{-1}c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -115,7 +185,7 @@
     prod
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{qPh}}$ & = 1e9 (1e-5) & $c^{-1}$ \\\hline
+           $\mathbf{k_{qPh}}$ & $\approx$ 1e9 (1e-5) & $c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -131,8 +201,8 @@
     \QD
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{D}}$  & = ?(1)   & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{-D}}$ & = (0.05) & $c^{-1}$       \\\hline
+           $\mathbf{k_{D}}$  & $\approx$ ?(1)   & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{-D}}$ & $\approx$ (0.05) & $c^{-1}$       \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -148,8 +218,8 @@
     \QHH + N-prod
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{r}}$ & = ?(1e9)      & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{p}}$ & = 1e-5 - 1e-3 & $c^{-1}$       \\\hline
+           $\mathbf{k_{r}}$ & $\approx$ ?(1e9)      & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{p}}$ & $\approx$ 1e-5 - 1e-3 & $c^{-1}$       \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -162,15 +232,15 @@
     N-prod
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{rD}}$ & = ? (1e9) & $M^{-1}c^{-1}$ \\\hline
+           $\mathbf{k_{rD}}$ & $\approx$ ? (1e9) & $M^{-1}c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
 \vspace{1.5mm}
 
 
-\newpage
 
+\newpage
 \textbf{----------------------------------------------------- SIMPLE SYSTEM -----------------------------------------------------}
 \\
 \\
@@ -182,8 +252,8 @@
     \Qt
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_l}$    & = 1e8 - 1e10 & $c^{-1}$ \\
-           $\mathbf{k_{-l}}$ & = 1e5  - 1e6 & $c^{-1}$ \\\hline
+           $\mathbf{k_l}$    & $\approx$ 1e8 - 1e10 & $c^{-1}$ \\
+           $\mathbf{k_{-l}}$ & $\approx$ 1e5  - 1e6 & $c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -199,7 +269,7 @@
     \QH + \D
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{H+}}$ & = 1e8 - 1e10 & $M^{-1}c^{-1}$ \\\hline
+           $\mathbf{k_{H+}}$ & $\approx$ 1e8 - 1e10 & $M^{-1}c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -215,8 +285,8 @@
     \Q + \QHH
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{qH}}$            & = 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
-           $\mathbf{\mathbf{k_{redQ}}}$ & = 1e9       & $M^{-1}c^{-1}$ \\\hline
+           $\mathbf{k_{qH}}$            & $\approx$ 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
+           $\mathbf{\mathbf{k_{redQ}}}$ & $\approx$ 1e9       & $M^{-1}c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -232,7 +302,7 @@
     \QHD
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{r}}$ & = ?(1e9) & $c^{-1}$ \\\hline
+           $\mathbf{k_{r}}$ & $\approx$ ?(1e9) & $c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -246,7 +316,7 @@
     N-prod
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{rD}}$ & = ? (1e9) & $c^{-1}$ \\\hline
+           $\mathbf{k_{rD}}$ & $\approx$ ? (1e9) & $c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
