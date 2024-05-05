@@ -28,21 +28,14 @@
 \textbf{----------------------------------------------------- FULL POLIMERIZATION -----------------------------------------------------}
 \\
 \\
-\schemestart
-\D + M
-\arrow{->[$k_{init}$]}
-$\sim$$P^{\bullet }$
-\schemestop
-\\
-\\
-\begin{tabular}{ l l l l }
+\begin{tabular}{ l l l l l}
     \textbf{Initiation}:     &
     \schemestart
     \D + M
     \arrow{->[$k_{init}$]}
     $\sim$$P_1^{\bullet }$
     \schemestop              &
-    $\mathbf{k_{init}}$      & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{init}}$      & $\approx$           & $M^{-1}c^{-1}$ \\
 
     \textbf{Propagation}:    &
                 \schemestart
@@ -50,7 +43,7 @@ $\sim$$P^{\bullet }$
             \arrow{->[$k_{prop}$]}
         $\sim$$P_{n+1}^{\bullet }$
     \schemestop              &
-    $\mathbf{k_{prop}}$      & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{prop}}$      & $\approx$ 1e2 - 1e4 & $M^{-1}c^{-1}$ \\
 
                              &
                 \schemestart
@@ -58,17 +51,7 @@ $\sim$$P^{\bullet }$
                 \arrow{->[$k_{prop}$]}
             $\sim$$P_2^{\bullet }$
     \schemestop              &
-                             &                          \\
-
-
-            % \textbf{Addition}:                &
-            % \schemestart
-            % \P + X
-            % \arrow{->[$k_{add}$]}
-            % \T
-            % \schemestop
-            %                                   &
-            % $\mathbf{k_{add}}$ $\approx$      & $M^{-1}c^{-1}$ \\
+                             &                                      \\
 
     \textbf{Transfer}:       &
             \schemestart
@@ -76,7 +59,7 @@ $\sim$$P^{\bullet }$
                 \arrow{->[$k_{trans-sol}$]}
             $Sol^{\bullet}$ + $\sim$$P_n$
     \schemestop              &
-    $\mathbf{k_{trans-sol}}$ & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{trans-sol}}$ & $\approx$ 5         & $M^{-1}c^{-1}$ \\
 
                              &
             \schemestart
@@ -84,7 +67,7 @@ $\sim$$P^{\bullet }$
                 \arrow{->[$k_{trans-m}$]}
             $M^{\bullet}$ + $\sim$$P_n$
     \schemestop              &
-    $\mathbf{k_{trans-m}}$   & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{trans-m}}$   & $\approx$ 1e-3 - 1  & $M^{-1}c^{-1}$ \\
 
     \textbf{Inhibition}:     &
             \schemestart
@@ -92,7 +75,7 @@ $\sim$$P^{\bullet }$
                 \arrow{->[$k_{inh}$]}
             $Z^{\bullet}$ + $\sim$$P_n$
     \schemestop              &
-    $\mathbf{k_{inh}}$       & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{inh}}$       & $\approx$ 1e2 - 1e3 & $M^{-1}c^{-1}$ \\
 
     \textbf{Termination:}    &
             \schemestart
@@ -101,7 +84,7 @@ $\sim$$P^{\bullet }$
             $\sim$$P_n$
             \schemestop
                              &
-    $\mathbf{k_{ter-l}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{ter-l}}$     & $\approx$ ?         & $c^{-1}$       \\
 
                              &
             \schemestart
@@ -109,7 +92,7 @@ $\sim$$P^{\bullet }$
             \arrow{->[$k_{ter-rec}$]}
         $\sim$$P_n$--$P_k$$\sim$
     \schemestop              &
-    $\mathbf{k_{ter-rec}}$   & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{ter-rec}}$   & $\approx$ 1e7 - 1e8 & $M^{-1}c^{-1}$ \\
 
                              &
             \schemestart
@@ -117,7 +100,71 @@ $\sim$$P^{\bullet }$
             \arrow{->[$k_{ter-disp}$]}
         $\sim$$P_{n-1}=CH_2$ + $\sim$$P_{k-1}-CH_3$
     \schemestop              &
-    $\mathbf{k_{ter-disp}}$  & $\approx$ $M^{-1}c^{-1}$ \\
+    $\mathbf{k_{ter-disp}}$  & $\approx$           & $M^{-1}c^{-1}$ \\
+\end{tabular}
+\vspace{1.5mm}
+\newpage
+
+\textbf{----------------------------------------------------- SIMPLE POLIMERIZATION -----------------------------------------------------}
+\\
+\\
+\begin{tabular}{ l l l l }
+    \textbf{Initiation}:    &
+    \schemestart
+    \D + M
+    \arrow{->[$k_{init}$]}
+    $\sim$$P^{\bullet}$
+    \schemestop             &
+    $\mathbf{k_{init}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+
+    \textbf{Propagation}:   &
+                \schemestart
+            $\sim$$P_n^{\bullet }$ + M
+            \arrow{->[$k_{prop}$]}
+        $\sim$$P_{n+1}^{\bullet }$
+    \schemestop             &
+    $\mathbf{k_{prop}}$     & $\approx$ $M^{-1}c^{-1}$ \\
+
+                            &
+                \schemestart
+            $M^{\bullet}$ + M
+                \arrow{->[$k_{prop}$]}
+            $\sim$$P_2^{\bullet }$
+    \schemestop             &
+                            &                          \\
+
+    \textbf{Inhibition}:    &
+            \schemestart
+        $\sim$$P_n^{\bullet}$ + Z
+                \arrow{->[$k_{inh}$]}
+            $Z^{\bullet}$ + $\sim$$P_n$
+    \schemestop             &
+    $\mathbf{k_{inh}}$      & $\approx$ $M^{-1}c^{-1}$ \\
+
+    \textbf{Termination:}   &
+            \schemestart
+        $\sim$$P_n^{\bullet}$
+                \arrow{->[$k_{ter-lin}$]}
+            $\sim$$P_n$
+            \schemestop
+                            &
+    $\mathbf{k_{ter-l}}$    & $\approx$ $M^{-1}c^{-1}$ \\
+
+                            &
+            \schemestart
+        $\sim$$P_n^{\bullet }$ + $\sim$$P_k^{\bullet }$
+            \arrow{->[$k_{ter-rec}$]}
+        $\sim$$P_n$--$P_k$$\sim$
+    \schemestop             &
+    $\mathbf{k_{ter-rec}}$  & $\approx$ $M^{-1}c^{-1}$ \\
+
+                            &
+            \schemestart
+        $\sim$$P_n^{\bullet }$  + $\sim$$P_k^{\bullet }$
+            \arrow{->[$k_{ter-disp}$]}
+        $\sim$$P_{n-1}=CH_2$ + $\sim$$P_{k-1}-CH_3$
+    \schemestop             &
+    $\mathbf{k_{ter-disp}}$ & $\approx$ $M^{-1}c^{-1}$ \\
 \end{tabular}
 \vspace{1.5mm}
 
@@ -126,7 +173,6 @@ $\sim$$P^{\bullet }$
 \textbf{----------------------------------------------------- FULL INITIATION -----------------------------------------------------}
 \\
 \\
-
 \textbf{Activation:}
 \begin{tabular}{ c c }
     \schemestart
@@ -175,13 +221,13 @@ $\sim$$P^{\bullet }$
     \Qt + \QHH
     \arrow{->[$k_{qH}$]}
     2\QH
-    \arrow{<=>[$k_{dispQ}$][$k_{red/oxQ}$]}
+    \arrow{<=>[$k_{dQ}$][$k_{redQ}$]}
     \Q + \QHH
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{qH}}$      & $\approx$ 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{red/oxQ}}$ & $\approx$ 1e3       & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{dispQ}}$   & $\approx$ 1e9       & $M^{-1}c^{-1}$ \\\hline
+           $\mathbf{k_{qH}}$   & $\approx$ 1e5 - 1e9 & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{redQ}}$ & $\approx$ 1e3       & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{dQ}}$   & $\approx$ 1e9       & $M^{-1}c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
@@ -200,23 +246,48 @@ $\sim$$P^{\bullet }$
     \vspace{1.5mm}
 \end{tabular}
 \vspace{1.5mm}
-
+\\
+\\
+\textbf{Radicals:}
 
 \begin{tabular}{ c c }
     \schemestart
-    \Qt
-    \arrow{->[$k_{qPh}$]}
-    prod
+    \QH + \D
+    \arrow{->[$k_{r}$]}
+    \QHD
+    \arrow{->[$k_{p}$]}
+    \QHH + N-prod
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{qPh}}$ & $\approx$ 1e9 (1e-5) & $c^{-1}$ \\\hline
+           $\mathbf{k_{r}}$ & $\approx$ 1e7 - 1e9   & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{p}}$ & $\approx$ 1e-5 - 1e-3 & $c^{-1}$       \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
 \vspace{1.5mm}
-\\
-\\
-\textbf{Other:}
+
+
+\begin{tabular}{ c c }
+    \makecell[l]{
+    \schemestart
+    2\D
+    \arrow{->[$k_{rD-rec}$]}
+    D-D
+    \schemestop                                                                                   \\
+    \schemestart
+    2\D
+    \arrow{->[$k_{rD-dis}$]}
+    DH + N-prod
+    \schemestop
+    }
+     & \begin{tabular}{ l l l }
+           $\mathbf{k_{rD-rec}}$ & $\approx$ 1e10 & $M^{-1}c^{-1}$ \\
+           $\mathbf{k_{rD-dis}}$ & $\approx$ 1e9  & $M^{-1}c^{-1}$ \\\hline
+       \end{tabular}
+    \vspace{1.5mm}
+\end{tabular}
+\vspace{1.5mm}
+
 
 \begin{tabular}{ c c }
     \schemestart
@@ -231,37 +302,21 @@ $\sim$$P^{\bullet }$
     \vspace{1.5mm}
 \end{tabular}
 \vspace{1.5mm}
-
-
+\\
+\\
+\textbf{Photolysis:}
 \begin{tabular}{ c c }
     \schemestart
-    \QH + \D
-    \arrow{->[$k_{r}$]}
-    \QHD
-    \arrow{->[$k_{p}$]}
-    \QHH + N-prod
+    \Qt
+    \arrow{->[$k_{Ph}$]}
+    prod
     \schemestop
      & \begin{tabular}{ l l l }
-           $\mathbf{k_{r}}$ & $\approx$ ?(1e9)      & $M^{-1}c^{-1}$ \\
-           $\mathbf{k_{p}}$ & $\approx$ 1e-5 - 1e-3 & $c^{-1}$       \\\hline
+           $\mathbf{k_{Ph}}$ & $\approx$ 1e-4 - 1e-3 & $c^{-1}$ \\\hline
        \end{tabular}
     \vspace{1.5mm}
 \end{tabular}
 \vspace{1.5mm}
-
-\begin{tabular}{ c c }
-    \schemestart
-    2\D
-    \arrow{->[$k_{rD}$]}
-    N-prod
-    \schemestop
-     & \begin{tabular}{ l l l }
-           $\mathbf{k_{rD}}$ & $\approx$ ? (1e9) & $M^{-1}c^{-1}$ \\\hline
-       \end{tabular}
-    \vspace{1.5mm}
-\end{tabular}
-\vspace{1.5mm}
-
 
 
 \newpage
@@ -332,18 +387,5 @@ $\sim$$P^{\bullet }$
 \end{tabular}
 \vspace{1.5mm}
 
-
-\begin{tabular}{ c c }
-    \schemestart
-    2\D
-    \arrow{->[$k_{rD}$]}
-    N-prod
-    \schemestop
-     & \begin{tabular}{ l l l }
-           $\mathbf{k_{rD}}$ & $\approx$ ? (1e9) & $c^{-1}$ \\\hline
-       \end{tabular}
-    \vspace{1.5mm}
-\end{tabular}
-\vspace{1.5mm}
 
 \end{document}
