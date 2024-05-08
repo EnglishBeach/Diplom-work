@@ -1,28 +1,38 @@
 <Reactions>
 
-# Qt
-Q = Qt,             k = 1e+04
+# l -l
+Q = Qt,             k = 1e+09
 Qt = Q,             k = 1e+05
-# qE2 - H
-Qt + DH = Q_DH,     k = 6e+09
-Q_DH = Qt + DH,     k = 1e+08
-Q_DH = QH + D,      k = 1e+09
-# qH - redQ2
+# diff qE -qE
+Qt + DH = Q_DH,     k = 1e+08
+Q_DH = Q_DHi,       k = 1e+09
+Q_DHi = Q_DH,       k = 1e+08
+# diff
+Q_DHi = prod,       k = 1e+08
+# H+
+Q_DHi = Q_DHb,      k = 1e+08
+# diff
+Q_DHb = QH + D
+# qH
 Qt + QHH = QH + QH, k = 1e+06
+# dQ redQ
 QH + QH = Q + QHH,  k = 1e+09
-Q + QHH = QH + QH,  k = 1
+Q + QHH = QH + QH,  k = 1000
 #  qQD
 Qt + QHD = QH + QD, k = 2
-# qPh
-Qt = prod,          k = 1e-05
-# D2
+# r
+QH + D = QHD,       k = 1e+08
+# p
+QHD = QHH + prod,   k = 0.0001
+# rD-rec
+D + D = prod,       k = 1e+10
+# rD-dis
+D + D = DH + prod,  k = 1e+09
+# D -D
 Q + D = QD,         k = 1
 QD = Q + D,         k = 0.05
-#r -p
-QH + D = QHD,       k = 1e+09
-QHD = QHH,          k = 0.0001
-# rD
-D + D = prod,       k = 1e+09
+# qPh
+Qt = prod,          k = 0.0001
 
 <Initial concentrations>
 

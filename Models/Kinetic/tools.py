@@ -30,9 +30,9 @@ class K_gen(dict):
         return copy.deepcopy(self)
 
 
-def get_init(comps_str: str, init: list):
+def get_init(comps_str: str, init: dict):
     comps = comps_str.replace('[', '').replace(']', '').split(', ')
-    return dict(zip(comps, init))
+    return {comp: init.get(comp, 0) for comp in comps}
 
 
 class Solver:
