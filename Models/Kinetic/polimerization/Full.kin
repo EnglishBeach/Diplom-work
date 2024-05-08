@@ -1,0 +1,32 @@
+<Reactions>
+
+# init
+D + M = PR
+#prop
+PR + M = PR
+MR + M = PR
+#trans-sol
+PR + Sol = SolR + P
+# trans-m
+PR + M = MR + P
+# inhibition
+PR + Q = QH + P
+#ter-lin
+PR = P
+#ter-rec
+PR + PR = P
+#ter-dis
+PR + PR = P
+
+<Initial concentrations>
+
+
+<Temperature>
+
+298.15, 0, 0
+
+<Time grid>
+
+0 (auto) 1
+
+<End of data>
