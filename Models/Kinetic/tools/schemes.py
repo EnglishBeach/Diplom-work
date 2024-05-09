@@ -104,7 +104,7 @@ class Sweeper:
 
     def __getitem__(self, comp):
         sigma = 1e-9
-        return self.y1[comp] - self.y2[comp]
+        return (self.y1[comp] - self.y2[comp]) / self.y1[comp].mean() * 100
 
     def solve(self, initial={}, K={}):
         self.y2.solve(initial=initial, K=K)

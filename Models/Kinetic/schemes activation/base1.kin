@@ -1,0 +1,27 @@
+<Reactions>
+
+# l -l
+Q = Qt
+# H2
+Qt + DH = QH + D
+# r
+QH + D = QHD
+# dQ
+QH + QH = Q + QHH
+# rD-rec
+D + D = prod
+# rD-dis
+D + D = DH + prod
+
+<Initial concentrations>
+
+
+<Temperature>
+
+298.15, 0, 0
+
+<Time grid>
+
+0 (auto) 1
+
+<End of data>
