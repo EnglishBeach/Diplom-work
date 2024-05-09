@@ -71,8 +71,8 @@ class Solver:
                 args=(k,),
                 method=method,
                 dense_output=True,
-                rtol=0.00001,
-                max_step=self.T[1] / 10,
+                # rtol=0.00001,
+                max_step=self.T[1],
             )
             self.y = solution.sol(self.T)
             # print(method)

@@ -2,8 +2,8 @@ import itertools
 
 import numpy as np
 import pandas as pd
-import tools
-from tools import Solver
+import Models.Kinetic.tools.schemes as schemes
+from Models.Kinetic.tools.schemes import Solver
 from tqdm import tqdm
 
 
@@ -57,7 +57,7 @@ def sweep(Y1: Solver, Y2: Solver, init={}):
     df.to_csv('result.csv')
 
 
-class K(tools.K_gen):
+class K(schemes.K_gen):
     # INITIATION
     l = 1e9 * 0.00001  # 8 10
     l_ = 1e5  # 5 6
@@ -83,7 +83,7 @@ class K(tools.K_gen):
     rD = 1e9
 
 
-class K_sweep(tools.K_gen):
+class K_sweep(schemes.K_gen):
     # INITIATION
 
     l = 1e9 * 0.00001  # 8 10
@@ -146,7 +146,7 @@ def system_full(t, C, k=K()):
 
 c_full = '[Q, Qt, DH, Q_DH, QH, D, QHH, QHD, QD]'
 initial_full = [1, 0, 1, 0, 0, 0, 0, 0, 0]
-init_full = tools.get_init(c_full, initial_full)
+init_full = schemes.get_init(c_full, initial_full)
 
 
 def system_base(t, C, k=K()):
@@ -174,12 +174,12 @@ def system_base(t, C, k=K()):
 
 c_base = '[Q, Qt, DH, QH, D, QHH]'
 initial_base = [1, 0, 1, 0, 0, 0]
-init_base = tools.get_init(c_base, initial_base)
+init_base = schemes.get_init(c_base, initial_base)
 
 T = np.linspace(0, 0.001, 100)
 
-y1 = tools.Solver(system_full, K(), init_full, T)
-y2 = tools.Solver(system_base, K_sweep(), init_base, T)
+y1 = schemes.Solver(system_full, K(), init_full, T)
+y2 = schemes.Solver(system_base, K_sweep(), init_base, T)
 y2.initial
 if __name__ == '__main__':
     sweep(y1, y2)

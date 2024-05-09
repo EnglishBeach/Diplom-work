@@ -5,10 +5,10 @@ import numpy as np
 import pandas as pd
 from matplotlib.ticker import FuncFormatter
 from matplotlib.widgets import Button, Slider
-from tools import Comparator, K_gen, Solver, Sweeper, get_init
+from tools.schemes import K_gen, Solver, get_init
 
 custom_plots = {}
-t = np.linspace(0, 1, 10000)
+t = np.linspace(0, 0.1, 1000)
 
 
 class K_mix_full(K_gen):
