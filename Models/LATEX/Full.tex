@@ -173,8 +173,8 @@
     \vspace{1.5mm}
 \end{tabular}
 \vspace{1.5mm}
-
-
+\\
+\\
 \textbf{----------------------------------------------------- SIMPLE SYSTEM -----------------------------------------------------}
 \\
 \\
@@ -248,7 +248,7 @@
     \vspace{1.5mm}
 \end{tabular}
 \vspace{1.5mm}
-
+\newpage
 
 \textbf{----------------------------------------------------- FULL POLIMERIZATION -----------------------------------------------------}
 \\
@@ -328,8 +328,8 @@
     $\mathbf{k_{ter-disp}}$  & $\approx$           & $M^{-1}c^{-1}$ \\
 \end{tabular}
 \vspace{1.5mm}
-\newpage
-
+\\
+\\
 \textbf{----------------------------------------------------- SIMPLE POLIMERIZATION -----------------------------------------------------}
 \\
 \\
@@ -343,34 +343,27 @@
     $\mathbf{k_{init}}$     & $\approx$ $M^{-1}c^{-1}$ \\
 
     \textbf{Propagation}:   &
-                \schemestart
-            $\sim$$P_n^{\bullet }$ + M
-            \arrow{->[$k_{prop}$]}
-        $\sim$$P_{n+1}^{\bullet }$
+            \schemestart
+        $\sim$$P_n^{\bullet }$ + M
+        \arrow{->[$k_{prop}$]}
+    $\sim$$P_{n+1}^{\bullet }$
     \schemestop             &
     $\mathbf{k_{prop}}$     & $\approx$ $M^{-1}c^{-1}$ \\
 
-                            &
-                \schemestart
-            $M^{\bullet}$ + M
-                \arrow{->[$k_{prop}$]}
-            $\sim$$P_2^{\bullet }$
-    \schemestop             &
-                            &                          \\
 
     \textbf{Inhibition}:    &
             \schemestart
         $\sim$$P_n^{\bullet}$ + Z
-                \arrow{->[$k_{inh}$]}
-            $Z^{\bullet}$ + $\sim$$P_n$
+        \arrow{->[$k_{inh}$]}
+    $Z^{\bullet}$ + $\sim$$P_n$
     \schemestop             &
     $\mathbf{k_{inh}}$      & $\approx$ $M^{-1}c^{-1}$ \\
 
     \textbf{Termination:}   &
             \schemestart
         $\sim$$P_n^{\bullet}$
-                \arrow{->[$k_{ter-lin}$]}
-            $\sim$$P_n$
+        \arrow{->[$k_{ter-lin}$]}
+    $\sim$$P_n$
             \schemestop
                             &
     $\mathbf{k_{ter-l}}$    & $\approx$ $M^{-1}c^{-1}$ \\
