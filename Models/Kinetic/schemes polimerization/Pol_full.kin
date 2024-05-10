@@ -1,32 +1,21 @@
 <Reactions>
 
-# l
-Q = Qt
-# diff
-Qt + DH = QH + D
-# r
-QH + D = QHD
-# p
-QHD = QHH + prod
-# dQ
-QH + QH = Q + QHH
-# rD-rec
-D + D = prod
-# rD-dis
-D + D = DH + prod
 # init
 D + M = PR
 #prop
 PR + M = PR
+MR + M = PR
 #trans-sol
 PR + Sol = SolR + P
 # trans-m
-PR + M = PR + P
-# inh
+PR + M = MR + P
+# inhibition
 PR + Q = QH + P
 #ter-lin
 PR = P
 #ter-rec
+PR + PR = P
+#ter-dis
 PR + PR = P
 
 <Initial concentrations>
