@@ -1,6 +1,6 @@
 <Reactions>
 
-# l -l
+# l
 Q = Qt
 # H2
 Qt + DH = QH + D
@@ -12,6 +12,20 @@ QH + QH = Q + QHH
 D + D = prod
 # rD-dis
 D + D = DH + prod
+# init
+D + M = PR
+#prop
+PR + M = PR
+#trans-sol
+PR + Sol = SolR + P
+# trans-m
+PR + M = PR + P
+# inh
+PR + Q = QH + P
+#ter-lin
+PR = P
+#ter-rec
+PR + PR = P
 
 <Initial concentrations>
 
