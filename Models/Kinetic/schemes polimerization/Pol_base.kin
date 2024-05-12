@@ -4,10 +4,6 @@
 D + M = PR
 #prop
 PR + M = PR
-#trans-sol
-PR + Sol = SolR + P
-# trans-m
-PR + M = PR + P
 # inhibition
 PR + Q = QH + P
 #ter-lin
