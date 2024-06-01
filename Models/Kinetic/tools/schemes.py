@@ -62,7 +62,6 @@ class Solver:
             'BDF',
             'Radau',
             'LSODA',
-            'RK45',
         ]:
             solution = solve_ivp(
                 fun=self._system,
